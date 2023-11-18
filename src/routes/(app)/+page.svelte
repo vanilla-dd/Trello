@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { Medal } from 'lucide-svelte';
+	import { signIn, signOut } from '@auth/sveltekit/client';
+	import { page } from '$app/stores';
 </script>
 
 <svelte:head>
@@ -46,3 +48,17 @@
 	</div>
 	<a href="/login" class="btn mt-6 rounded-md bg-black text-white"> Get Taskify for free </a>
 </div>
+<p>
+	{#if $page.data.session}
+		{#if $page.data.session.user?.image}
+			<span style="background-image: url('{$page.data.session.user.image}')" class="avatar" />
+		{/if}
+		<span class="signedInText">
+			<small>Signed in as</small><br />
+			<strong>{$page.data.session.user?.name ?? 'User'}</strong>
+		</span>
+		<button on:click={() => signOut()} class="button">Sign out</button>
+	{:else}
+		<button on:click={() => signIn('github')}>Sign In with GitHub</button>
+	{/if}
+</p>
