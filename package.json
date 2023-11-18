@@ -40,6 +40,9 @@
   },
   "type": "module",
   "dependencies": {
+    "@auth/core": "^0.18.1",
+    "@auth/prisma-adapter": "^1.0.6",
+    "@auth/sveltekit": "^0.3.12",
     "@floating-ui/dom": "1.5.3",
     "@prisma/client": "^5.6.0",
     "cal-sans": "^1.0.1",

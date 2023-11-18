@@ -2,6 +2,14 @@
 	import { Medal } from 'lucide-svelte';
 </script>
 
+<svelte:head>
+	<title>Taskify</title>
+	<meta name="description" content="A Simple Trello Clone" />
+	<meta property="og:title" content="Trello" />
+	<meta property="og:description" content="A Simple Trello Clone" />
+	<meta property="og:image" content="https://trello-omega-clone.vercel.app/logo.png" />
+</svelte:head>
+
 <div class="flex flex-col items-center justify-center">
 	<div class="flex flex-col items-center justify-center">
 		<div
