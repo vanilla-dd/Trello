@@ -59,6 +59,6 @@
 		</span>
 		<button on:click={() => signOut()} class="button">Sign out</button>
 	{:else}
-		<button on:click={() => signIn('github')}>Sign In with GitHub</button>
+		<button on:click={() => signIn('github', { callbackUrl: '/' })}>Sign In with GitHub</button>
 	{/if}
 </p>
