@@ -3,6 +3,21 @@
 </script>
 
 <svelte:head>
+	<!-- Facebook Meta Tags -->
+	<meta property="og:url" content="https://trello-omega-clone.vercel.app/" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Trello" />
+	<meta property="og:description" content="A Simple Trello Clone" />
+	<meta property="og:image" content="https://trello-omega-clone.vercel.app/logo.png" />
+
+	<!-- Twitter Meta Tags -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta property="twitter:domain" content="trello-omega-clone.vercel.app" />
+	<meta property="twitter:url" content="https://trello-omega-clone.vercel.app/" />
+	<meta name="twitter:title" content="Trello" />
+	<meta name="twitter:description" content="A Simple Trello Clone" />
+	<meta name="twitter:image" content="https://trello-omega-clone.vercel.app/logo.png" />
+
 	<title>Taskify</title>
 	<meta name="description" content="A Simple Trello Clone" />
 	<meta property="og:title" content="Trello" />
