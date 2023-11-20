@@ -1,7 +1,6 @@
 <script lang="ts">
-import { Medal } from 'lucide-svelte';
-import { signIn, signOut } from '@auth/sveltekit/client';
-import { page } from '$app/stores';
+	import { Medal } from 'lucide-svelte';
+	import { signIn, signOut } from "@auth/sveltekit/client"
 </script>
 
 <svelte:head>
@@ -28,6 +27,7 @@ import { page } from '$app/stores';
 </svelte:head>
 
 <div class="flex flex-col items-center justify-center">
+	<button on:click={()=>{signIn()}}>ehlo</button>
 	<div class="flex flex-col items-center justify-center">
 		<div
 			class="mb-4 flex items-center rounded-full border bg-amber-100 p-4 uppercase text-amber-700 shadow-sm"
