@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Medal } from 'lucide-svelte';
-	import { signIn, signOut } from '@auth/sveltekit/client';
-	import { page } from '$app/stores';
+import { Medal } from 'lucide-svelte';
+import { signIn, signOut } from '@auth/sveltekit/client';
+import { page } from '$app/stores';
 </script>
 
 <svelte:head>
@@ -46,19 +46,5 @@
 		Colaborate, manage projects, and reach new productivity peaks. From high rises to the home
 		office, the way your team works is unique - accomplish it all with Taskify.
 	</div>
-	<a href="/login" class="btn mt-6 rounded-md bg-black text-white"> Get Taskify for free </a>
+	<a href="/login" class="mt-6 rounded-md bg-black px-3 py-2 text-white"> Get Taskify for free </a>
 </div>
-<p>
-	{#if $page.data.session}
-		{#if $page.data.session.user?.image}
-			<span style="background-image: url('{$page.data.session.user.image}')" class="avatar" />
-		{/if}
-		<span class="signedInText">
-			<small>Signed in as</small><br />
-			<strong>{$page.data.session.user?.name ?? 'User'}</strong>
-		</span>
-		<button on:click={() => signOut()} class="button">Sign out</button>
-	{:else}
-		<button on:click={() => signIn('github', { callbackUrl: '/' })}>Sign In with GitHub</button>
-	{/if}
-</p>

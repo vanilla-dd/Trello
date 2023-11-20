@@ -38,14 +38,22 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+// Define the User table
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  id               String            @id @default(cuid())
+  name             String?
+  email            String?           @unique
+  emailVerified    DateTime?
+  image            String?
+  boardMemberships BoardMembership[]
+  accounts         Account[]
+  boards           Board[]
+  sessions         Session[]
+  Card             Card[]
+  Comment          Comment[]
+  Activity         Activity[]
+
+  @@index([email, id])
 }
 
 model VerificationToken {
@@ -54,4 +62,111 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// Define the Board table
+model Board {
+  id         Int               @id @default(autoincrement())
+  title      String
+  isPublic   Boolean           @default(true)
+  members    BoardMembership[]
+  users      User[]
+  lists      List[]
+  activities Activity[]
+}
+
+model BoardMembership {
+  userId  String
+  boardId Int
+  role    String
+  user    User   @relation(fields: [userId], references: [id])
+  board   Board  @relation(fields: [boardId], references: [id])
+
+  @@id([userId, boardId]) // Compound unique constraint
+}
+
+// Define the List table
+model List {
+  id       Int        @id @default(autoincrement())
+  title    String
+  board    Board      @relation(fields: [boardId], references: [id])
+  boardId  Int
+  position Int        @default(autoincrement())
+  cards    Card[]
+  Activity Activity[]
+
+  @@index([boardId])
+}
+
+// Define the Card table
+model Card {
+  id          Int          @id @default(autoincrement())
+  title       String
+  content     String?
+  position    Int          @default(autoincrement())
+  list        List         @relation(fields: [listId], references: [id])
+  listId      Int
+  assignedTo  User?        @relation(fields: [userId], references: [id])
+  attachments Attachment[]
+  comments    Comment[]
+  checklist   Checklist?
+  userId      String?
+  Activity    Activity[]
+}
+
+// Define the Attachment table
+model Attachment {
+  id       Int    @id @default(autoincrement())
+  filename String
+  url      String
+  card     Card   @relation(fields: [cardId], references: [id])
+  cardId   Int
+}
+
+// Define the Checklist table
+// Define the Checklist table
+model Checklist {
+  id     Int             @id @default(autoincrement())
+  title  String
+  card   Card            @relation(fields: [cardId], references: [id])
+  cardId Int             @unique
+  items  ChecklistItem[]
+}
+
+// Define the ChecklistItem table
+model ChecklistItem {
+  id          Int        @id @default(autoincrement())
+  content     String
+  isChecked   Boolean
+  checklist   Checklist  @relation(fields: [checklistId], references: [id])
+  checklistId Int
+  Activity    Activity[]
+}
+
+// Define the Comment table
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  card      Card     @relation(fields: [cardId], references: [id])
+  cardId    Int
+}
+
+// Define the Activity table
+model Activity {
+  id              Int            @id @default(autoincrement())
+  action          String
+  createdAt       DateTime       @default(now())
+  user            User           @relation(fields: [userId], references: [id])
+  userId          String
+  board           Board          @relation(fields: [boardId], references: [id])
+  boardId         Int
+  list            List?          @relation(fields: [listId], references: [id])
+  listId          Int?
+  card            Card?          @relation(fields: [cardId], references: [id])
+  cardId          Int?
+  checklistItem   ChecklistItem? @relation(fields: [checklistItemId], references: [id])
+  checklistItemId Int?
 }
