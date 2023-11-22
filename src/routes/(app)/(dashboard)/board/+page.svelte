@@ -1,17 +1,19 @@
 <script lang="ts">
-	import { buttonVariants } from "$lib/components/ui/button";
-	import Button from "$lib/components/ui/button/button.svelte";
-  import * as Dialog from "$lib/components/ui/dialog";
-	import Input from "$lib/components/ui/input/input.svelte";
-	import Label from "$lib/components/ui/label/label.svelte";
-    import * as Select from "$lib/components/ui/select";
-    let visibility:string|unknown= 'public'
+	import { enhance } from '$app/forms';
+	import { buttonVariants } from '$lib/components/ui/button';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import Input from '$lib/components/ui/input/input.svelte';
+	import Label from '$lib/components/ui/label/label.svelte';
+	import * as Select from '$lib/components/ui/select';
+	let visibility: string | unknown = 'public';
+	export let data;
 </script>
 
 <p class="text-black">hi</p>
 <button class="px-3 border-2 py-1 text-black">Create</button>
 <Dialog.Root>
-	<Dialog.Trigger class={buttonVariants({ variant: "outline" })}>Create Board</Dialog.Trigger>
+	<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>Create Board</Dialog.Trigger>
 	<Dialog.Content class="sm:max-w-[425px]">
 		<form action="?/create" method="POST">
 			<Dialog.Header>
@@ -25,7 +27,11 @@
 				</div>
 				<div class="grid grid-cols-3 items-center place-self-start gap-4 w-full">
 					<Label>Board Visibility</Label>
-					<Select.Root onSelectedChange={(e)=>{visibility=e?.value}}>
+					<Select.Root
+						onSelectedChange={(e) => {
+							visibility = e?.value;
+						}}
+					>
 						<Select.Trigger class="col-span-2">
 							<Select.Value placeholder="Visibility" />
 						</Select.Trigger>
@@ -43,10 +49,12 @@
 		</form>
 	</Dialog.Content>
 </Dialog.Root>
-
-<select name="dfadf" id="dfs" class="select">
-	<option value="adf">hdlfsa</option>
-	<option value="adf">hdlfsa</option>
-	<option value="adf">hdlfsa</option>
-	<option value="adf">hdlfsa</option>
-</select>
+<div class="bg-black">
+	{#each data.allBoards as board}
+		<div class="flex gap-5">
+			<a href={`/board/${board.id}`}>
+				{board.title}
+			</a>
+		</div>
+	{/each}
+</div>

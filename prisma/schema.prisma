@@ -11,6 +11,12 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum Role {
+  Owner
+  Watcher
+  Coworker
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -78,7 +84,7 @@ model Board {
 model BoardMembership {
   userId  String
   boardId String
-  role    String
+  role    Role
   user    User   @relation(fields: [userId], references: [id])
   Board   Board  @relation(fields: [boardId], references: [id])
 
@@ -87,7 +93,7 @@ model BoardMembership {
 
 // Define the List table
 model List {
-  id       Int        @id @default(autoincrement())
+  id       String     @id @default(uuid())
   title    String
   board    Board      @relation(fields: [boardId], references: [id])
   boardId  String
@@ -100,12 +106,12 @@ model List {
 
 // Define the Card table
 model Card {
-  id          Int          @id @default(autoincrement())
+  id          String       @id @default(uuid())
   title       String
   content     String?
   position    Int          @default(autoincrement())
   list        List         @relation(fields: [listId], references: [id])
-  listId      Int
+  listId      String
   assignedTo  User?        @relation(fields: [userId], references: [id])
   attachments Attachment[]
   comments    Comment[]
@@ -116,11 +122,11 @@ model Card {
 
 // Define the Attachment table
 model Attachment {
-  id       Int    @id @default(autoincrement())
+  id       String @id @default(uuid())
   filename String
   url      String
   card     Card   @relation(fields: [cardId], references: [id])
-  cardId   Int
+  cardId   String
 }
 
 // Define the Checklist table
@@ -129,7 +135,7 @@ model Checklist {
   id     Int             @id @default(autoincrement())
   title  String
   card   Card            @relation(fields: [cardId], references: [id])
-  cardId Int             @unique
+  cardId String          @unique
   items  ChecklistItem[]
 }
 
@@ -151,7 +157,7 @@ model Comment {
   user      User     @relation(fields: [userId], references: [id])
   userId    String
   card      Card     @relation(fields: [cardId], references: [id])
-  cardId    Int
+  cardId    String
 }
 
 // Define the Activity table
@@ -164,9 +170,9 @@ model Activity {
   board           Board          @relation(fields: [boardId], references: [id])
   boardId         String
   list            List?          @relation(fields: [listId], references: [id])
-  listId          Int?
+  listId          String?
   card            Card?          @relation(fields: [cardId], references: [id])
-  cardId          Int?
+  cardId          String?
   checklistItem   ChecklistItem? @relation(fields: [checklistItemId], references: [id])
   checklistItemId Int?
 }
