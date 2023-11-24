@@ -1,7 +1,9 @@
 import { prisma } from '$lib/server/db';
-import type { Actions } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import { fail, type Actions } from '@sveltejs/kit';
 import type { Role } from '@prisma/client';
+import type { PageServerLoad } from './$types';
+import { listCreateSchema } from '$lib/schema/formValidators';
+import { superValidate } from 'sveltekit-superforms/server';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const user = await locals.getSession();
@@ -52,7 +54,8 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	return {
 		isBoardMember,
 		lists,
-		boardData
+		boardData,
+		form: superValidate(listCreateSchema)
 	};
 };
 export const actions: Actions = {
@@ -107,17 +110,24 @@ export const actions: Actions = {
 
 		console.log('Member added successfully.');
 	},
-	createList: async ({ request, locals, url }) => {
-		const user = await locals.getSession();
-		const data = Object.fromEntries(await request.formData());
-		const listName = data.listName as string;
+	createList: async (event) => {
+		const user = await event.locals.getSession();
 		if (!user?.user) {
 			return;
+		}
+		const form = await superValidate(event, listCreateSchema);
+		if (!user?.user) {
+			return;
+		}
+		if (!form.valid) {
+			return fail(400, {
+				form
+			});
 		}
 		const isBoardMember = await prisma.boardMembership.findFirst({
 			where: {
 				userId: user?.user.id,
-				boardId: url.pathname.split('/')[2],
+				boardId: event.url.pathname.split('/')[2],
 				role: { in: ['Owner', 'Coworker'] }
 			}
 		});
@@ -126,13 +136,17 @@ export const actions: Actions = {
 			return;
 		}
 		const listPosition = await prisma.list.findFirst({
-			where: { boardId: url.pathname.split('/')[2] },
+			where: { boardId: event.url.pathname.split('/')[2] },
 			orderBy: { position: 'desc' },
 			select: { position: true }
 		});
-		const newPosition = listPosition ? +listPosition + 1 : 1;
+		const newPosition = listPosition?.position ? +listPosition.position + 1 : 1;
 		await prisma.list.create({
-			data: { title: listName, boardId: url.pathname.split('/')[2], position: newPosition }
+			data: {
+				title: form.data.title,
+				boardId: event.url.pathname.split('/')[2],
+				position: newPosition
+			}
 		});
 	},
 	createCard: async ({ request, locals, url }) => {

@@ -1,10 +1,11 @@
 <script>
+	import ListForm from '$lib/list/ListForm.svelte';
 	export let data;
 </script>
 
-<p class="text-black">
+<!-- <p class="text-black">
 	{JSON.stringify(data.isBoardMember)}
-</p>
+</p> -->
 
 {#if data.isBoardMember?.role === 'Owner'}
 	<form action="?/addMember" method="POST">
@@ -17,14 +18,11 @@
 	</form>
 {/if}
 {#if data.isBoardMember?.role === 'Owner' || data.isBoardMember?.role === 'Coworker'}
-	<form action="?/createList" method="POST">
-		<input type="text" name="listName" />
-		<button>Create</button>
-	</form>
+	<ListForm form={data.form} />
 {/if}
 <div class="text-black">
 	<div class="bg-red-300 flex gap-5 flex-col">
-		{#each data.lists as list}
+		{#each data.lists || [] as list}
 			<br />
 			{list.title}
 			<div class="bg-black text-white">
