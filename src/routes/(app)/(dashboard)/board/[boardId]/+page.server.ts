@@ -1,32 +1,56 @@
 import { prisma } from '$lib/server/db';
-import { redirect, type Actions } from '@sveltejs/kit';
+import type { Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import type { Role } from '@prisma/client';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const user = await locals.getSession();
 	const boardId = params.boardId;
-	const isBoardMember = await prisma.boardMembership.findFirst({
-		where: {
-			userId: user?.user.id,
-			boardId: params.boardId,
-			role: { in: ['Owner', 'Coworker', 'Watcher'] }
-		},
-		select: { Board: { select: { isPublic: true } } }
-	});
-	console.log(isBoardMember);
-	if (!isBoardMember && !isBoardMember?.Board?.isPublic) {
-		throw redirect(305, '/hele');
+	if (!user?.user) {
+		return;
 	}
-	const boardData = await prisma.board.findFirst({
+	const isBoardMember = await prisma.boardMembership.findUnique({
+		where: {
+			userId_boardId: {
+				userId: user?.user.id,
+				boardId: params.boardId
+			}
+		},
+		select: {
+			role: true,
+			userId: true,
+			boardId: true
+		}
+	});
+
+	// If the user is not in the board and the board is private, throw an error
+	// if (!isBoardMember || !isBoardMember?.Board?.isPublic) {
+	// console.error('Unauthorized access to private board');
+	// throw new Error('Unauthorized access to private board');
+	// }
+
+	const boardDataWithLists = await prisma.board.findFirst({
 		where: { id: boardId },
-		select: { isPublic: true, title: true, members: true, users: true }
+		include: {
+			lists: {
+				include: { cards: { orderBy: { position: 'asc' } } }
+			},
+			members: {
+				select: {
+					userId: true,
+					role: true,
+					user: { select: { id: true, name: true, email: true } }
+				}
+			}
+		}
 	});
-	const lists = await prisma.list.findMany({
-		where: { boardId: params.boardId },
-		include: { cards: { orderBy: { position: 'asc' } } }
-	});
+
+	// Access board data, lists, and members directly from the result
+	const boardData = boardDataWithLists;
+	const lists = boardDataWithLists?.lists || [];
+	// const members = boardDataWithLists?.members || [];
 	return {
+		isBoardMember,
 		lists,
 		boardData
 	};
@@ -41,41 +65,55 @@ export const actions: Actions = {
 		// const existingMembership = await prisma.boardMembership.findUnique({
 		//     where: { userId_boardId: { userId: userId, boardId: boardId } },
 		// });
+		if (!user?.user) {
+			return;
+		}
 		const existingMembership = await prisma.boardMembership.findUnique({
 			where: {
-				userId: user?.user?.id,
-				boardId: url.pathname.split('/')[2],
 				userId_boardId: {
 					userId: user?.user?.id,
 					boardId: url.pathname.split('/')[2]
 				}
 			}
 		});
-		if (existingMembership?.role !== 'Owner') {
+
+		if (!existingMembership || existingMembership.role !== 'Owner') {
 			console.error('User is not the owner of the board or membership does not exist.');
 			return;
 		}
-		const alreadyMember = await prisma.boardMembership.findFirst({
-			where: { userId: id }
+
+		const alreadyMember = await prisma.boardMembership.findUnique({
+			where: {
+				userId_boardId: {
+					userId: id,
+					boardId: url.pathname.split('/')[2]
+				}
+			}
 		});
 
 		if (alreadyMember) {
+			console.log(alreadyMember);
 			console.log('Already a member; if you want to change the role, go to settings.');
 			return;
 		}
+
 		await prisma.boardMembership.create({
 			data: {
 				userId: id,
 				boardId: url.pathname.split('/')[2],
-				role // or any other role you want to assign
+				role: role // or any other role you want to assign
 			}
 		});
+
+		console.log('Member added successfully.');
 	},
 	createList: async ({ request, locals, url }) => {
 		const user = await locals.getSession();
 		const data = Object.fromEntries(await request.formData());
 		const listName = data.listName as string;
-		console.log(url.pathname.split('/')[2]);
+		if (!user?.user) {
+			return;
+		}
 		const isBoardMember = await prisma.boardMembership.findFirst({
 			where: {
 				userId: user?.user.id,
@@ -87,12 +125,21 @@ export const actions: Actions = {
 			console.log('nada');
 			return;
 		}
+		const listPosition = await prisma.list.findFirst({
+			where: { boardId: url.pathname.split('/')[2] },
+			orderBy: { position: 'desc' },
+			select: { position: true }
+		});
+		const newPosition = listPosition ? +listPosition + 1 : 1;
 		await prisma.list.create({
-			data: { title: listName, boardId: url.pathname.split('/')[2] }
+			data: { title: listName, boardId: url.pathname.split('/')[2], position: newPosition }
 		});
 	},
 	createCard: async ({ request, locals, url }) => {
 		const user = await locals.getSession();
+		if (!user?.user) {
+			return;
+		}
 		const data = Object.fromEntries(await request.formData());
 		const listId = data.listId as string;
 		const boardId = data.boardId as string;
@@ -107,10 +154,19 @@ export const actions: Actions = {
 			console.log('nada');
 			return;
 		}
+
+		const cardPosition = await prisma.card.findFirst({
+			where: { listId },
+			orderBy: { position: 'desc' },
+			select: { position: true }
+		});
+		const newPosition = cardPosition ? +cardPosition + 1 : 1;
+
 		await prisma.card.create({
 			data: {
 				title: 'Task 1',
 				content: 'Complete task by EOD',
+				position: newPosition,
 				list: {
 					connect: {
 						id: listId, // Replace with the actual list ID
