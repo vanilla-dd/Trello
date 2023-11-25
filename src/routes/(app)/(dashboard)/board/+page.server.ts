@@ -9,9 +9,17 @@ export const load: PageServerLoad = async ({ locals }) => {
 		return;
 	}
 	const allBoards = await prisma.board.findMany({
-		where: { users: { every: { id: user?.user.id } } }
+		where: {
+			members: {
+				some: {
+					userId: user.user.id,
+					role: {
+						in: ['Owner', 'Watcher', 'Coworker']
+					}
+				}
+			}
+		}
 	});
-
 	return {
 		form: superValidate(boardCreateSchema),
 		allBoards
