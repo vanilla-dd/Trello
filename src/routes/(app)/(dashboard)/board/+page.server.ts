@@ -11,7 +11,11 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const allBoards = await prisma.board.findMany({
 		where: { users: { every: { id: user?.user.id } } }
 	});
-	return { form: superValidate(boardCreateSchema), allBoards };
+
+	return {
+		form: superValidate(boardCreateSchema),
+		allBoards
+	};
 };
 export const actions: Actions = {
 	default: async (event) => {

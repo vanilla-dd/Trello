@@ -1,15 +1,33 @@
 <script lang="ts">
 	import * as Form from '$lib/components/ui/form';
 	import { boardCreateSchema, type BoardCreateType } from '$lib/schema/formValidators';
+	import { Loader2 } from 'lucide-svelte';
+	import toast from 'svelte-french-toast';
 	import type { SuperValidated } from 'sveltekit-superforms';
 	export let form: SuperValidated<BoardCreateType>;
 </script>
 
-<Form.Root method="POST" {form} schema={boardCreateSchema} let:config>
+<Form.Root
+	method="POST"
+	{form}
+	schema={boardCreateSchema}
+	let:config
+	let:delayed
+	options={{
+		validators: boardCreateSchema,
+		multipleSubmits: 'prevent',
+		validationMethod: 'oninput',
+		onResult(event) {
+			event.result.type === 'success'
+				? toast.success('Board Created')
+				: toast.error('Failed to create Board');
+		}
+	}}
+>
 	<Form.Field {config} name="title">
 		<Form.Item>
 			<Form.Label>Board Title</Form.Label>
-			<Form.Input />
+			<Form.Input disabled={delayed} />
 			<Form.Validation />
 		</Form.Item>
 	</Form.Field>
@@ -18,7 +36,7 @@
 			<Form.Label class="flex gap-1"
 				>Visibility <small class="text-[8px] text-red-700">* Public by default</small></Form.Label
 			>
-			<Form.Select>
+			<Form.Select disabled={delayed}>
 				<Form.SelectTrigger placeholder="Select Board Visibility" />
 				<Form.SelectContent>
 					<Form.SelectItem value="public">Public</Form.SelectItem>
@@ -28,5 +46,10 @@
 			<Form.Validation />
 		</Form.Item>
 	</Form.Field>
-	<Form.Button>Submit</Form.Button>
+	<Form.Button disabled={delayed} class="flex gap-2 items-center font-bold justify-center"
+		>Create
+		{#if delayed}
+			<Loader2 class="animate-spin w-4 h-4" />
+		{/if}
+	</Form.Button>
 </Form.Root>
