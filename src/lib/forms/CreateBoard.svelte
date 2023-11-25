@@ -4,6 +4,7 @@
 	import { Loader2 } from 'lucide-svelte';
 	import toast from 'svelte-french-toast';
 	import type { SuperValidated } from 'sveltekit-superforms';
+	import FormPicker from './FormPicker.svelte';
 	export let form: SuperValidated<BoardCreateType>;
 </script>
 
@@ -13,6 +14,7 @@
 	schema={boardCreateSchema}
 	let:config
 	let:delayed
+	let:errors
 	options={{
 		validators: boardCreateSchema,
 		multipleSubmits: 'prevent',
@@ -24,6 +26,8 @@
 		}
 	}}
 >
+	<div class="text-sm font-medium text-center pb-4 text-neutral-400">Create Board</div>
+	<FormPicker {errors} pending={delayed} />
 	<Form.Field {config} name="title">
 		<Form.Item>
 			<Form.Label>Board Title</Form.Label>

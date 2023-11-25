@@ -7,7 +7,11 @@ export const boardCreateSchema = z.object({
 		.trim(),
 	visibility: z
 		.enum(['public', 'private'], { required_error: 'Please Select One' })
-		.default('public')
+		.default('public'),
+	imageId: z.string({
+		required_error: 'Image is required',
+		invalid_type_error: 'Image is required'
+	})
 });
 export const listCreateSchema = z.object({
 	title: z

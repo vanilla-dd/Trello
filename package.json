@@ -54,6 +54,7 @@
 		"sveltekit-superforms": "^1.10.2",
 		"tailwind-merge": "^2.0.0",
 		"tailwind-variants": "^0.1.18",
+		"unsplash-js": "^7.0.18",
 		"zod": "^3.22.4"
 	}
 }

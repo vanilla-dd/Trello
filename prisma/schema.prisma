@@ -72,18 +72,18 @@ model VerificationToken {
 
 // Define the Board table
 model Board {
-  id         String            @id @default(uuid())
-  title      String
-  isPublic   Boolean           @default(true)
-  members    BoardMembership[]
-  users      User[]
-  lists      List[]
-  activities Activity[]
-  // imageId       String
-  // imageThumbUrl String
-  // imageFullUrl  String
-  // imageUserName String
-  // imageLinkHTML String
+  id            String            @id @default(uuid())
+  title         String
+  isPublic      Boolean           @default(true)
+  members       BoardMembership[]
+  users         User[]
+  lists         List[]
+  activities    Activity[]
+  imageId       String
+  imageThumbUrl String
+  imageFullUrl  String
+  imageUserName String
+  imageLinkHTML String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

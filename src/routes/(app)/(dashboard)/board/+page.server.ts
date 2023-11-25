@@ -37,13 +37,23 @@ export const actions: Actions = {
 				form
 			});
 		}
-
+		console.log(form.data);
+		const [imageId, imageThumbUrl, imageFullUrl, imageLinkHTML, imageUserName] =
+			form.data.imageId.split('|');
+		if (!imageId || !imageThumbUrl || !imageFullUrl || !imageLinkHTML || !imageUserName) {
+			return fail(400, { form });
+		}
 		const visi = form.data.visibility === 'private' ? false : true;
 		const createdBoard = await prisma.board.create({
 			data: {
 				title: form.data.title,
 				isPublic: visi,
-				members: { create: [{ userId: user?.user?.id, role: 'Owner' }] }
+				members: { create: [{ userId: user?.user?.id, role: 'Owner' }] },
+				imageFullUrl,
+				imageId,
+				imageLinkHTML,
+				imageUserName,
+				imageThumbUrl
 			}
 		});
 		if (createdBoard) {

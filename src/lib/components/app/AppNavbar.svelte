@@ -1,7 +1,7 @@
 <script lang="ts">
-import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-import Logo from '../Logo.svelte';
-import { page } from '$app/stores';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import Logo from '../Logo.svelte';
+	import { page } from '$app/stores';
 </script>
 
 <nav class="fixed top-0 z-50 flex h-14 w-full items-center border-b bg-white px-4 shadow-sm">
@@ -26,7 +26,6 @@ import { page } from '$app/stores';
 						<a href="/me"> Profile </a>
 					</DropdownMenu.Item>
 					<DropdownMenu.Item>Subscription</DropdownMenu.Item>
-					<DropdownMenu.Item>Create Board</DropdownMenu.Item>
 					<DropdownMenu.Item>Log Out</DropdownMenu.Item>
 				</DropdownMenu.Group>
 			</DropdownMenu.Content>
