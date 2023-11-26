@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { Separator } from '$lib/components/ui/separator';
+	import PopOverForm from '$lib/components/popOverForm.svelte';
+	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { CreditCard, User2 } from 'lucide-svelte';
 	import Hint from '$lib/components/Hint.svelte';
-	import PopOverForm from '$lib/components/popOverForm.svelte';
 	export let data;
 </script>
 
@@ -35,6 +36,19 @@
 		Your Boards
 	</div>
 	<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+		{#each data.allBoards || [] as board (board.id)}
+			<a
+				href={`/board/${board.id}`}
+				class="group relative aspect-video bg-sky-700 rounded-sm h-full w-full overflow-hidden"
+			>
+				<img src={board.imageThumbUrl} alt="" class="w-full h-full" />
+				<div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 trnasition p-2">
+					<p class="relative font-semibold text-white">
+						{board.title}
+					</p>
+				</div>
+			</a>
+		{/each}
 		<PopOverForm form={data.form}>
 			<div
 				class="aspect-video relative h-full w-full bg-slate-400 rounded-sm flex flex-col gap-y-1 items-center justify-center hover:opacity-75 transition text-black"
@@ -48,4 +62,15 @@
 			</div>
 		</PopOverForm>
 	</div>
+</div>
+
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+	<Skeleton class="aspect-video h-full w-full p-2 bg-slate-200" />
+	<Skeleton class="aspect-video h-full w-full p-2 bg-slate-300" />
+	<Skeleton class="aspect-video h-full w-full p-2 bg-slate-300" />
+	<Skeleton class="aspect-video h-full w-full p-2 bg-slate-300" />
+	<Skeleton class="aspect-video h-full w-full p-2 bg-slate-300" />
+	<Skeleton class="aspect-video h-full w-full p-2 bg-slate-300" />
+	<Skeleton class="aspect-video h-full w-full p-2 bg-slate-300" />
+	<Skeleton class="aspect-video h-full w-full p-2 bg-slate-300" />
 </div>

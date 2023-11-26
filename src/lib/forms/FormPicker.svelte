@@ -6,9 +6,7 @@
 	let selectedImage: string;
 	let images: Array<Record<string, any>> = defaultImages;
 	export let pending: boolean;
-	export let errors: Record<string, string[] | undefined>;
 	let loading = false;
-	$: console.log(selectedImage);
 	const fetchImages = async () => {
 		try {
 			loading = true;
@@ -46,6 +44,7 @@
 						type="radio"
 						name="imageId"
 						hidden
+						id={image.id}
 						class="hidden"
 						disabled={pending}
 						checked={selectedImage === image.id}

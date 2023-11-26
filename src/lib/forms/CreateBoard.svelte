@@ -14,20 +14,24 @@
 	schema={boardCreateSchema}
 	let:config
 	let:delayed
-	let:errors
 	options={{
 		validators: boardCreateSchema,
 		multipleSubmits: 'prevent',
 		validationMethod: 'oninput',
 		onResult(event) {
-			event.result.type === 'success'
+			event.result.type === 'success' || event.result.type === 'redirect'
 				? toast.success('Board Created')
-				: toast.error('Failed to create Board');
+				: event.result.form
+				  ? Object.entries(event.result.data.form.errors).forEach(([key, value]) => {
+							toast.error(value[0]);
+				    })
+				  : toast.error('Cannot create Board');
+			console.log(event.result);
 		}
 	}}
 >
 	<div class="text-sm font-medium text-center pb-4 text-neutral-400">Create Board</div>
-	<FormPicker {errors} pending={delayed} />
+	<FormPicker pending={delayed} />
 	<Form.Field {config} name="title">
 		<Form.Item>
 			<Form.Label>Board Title</Form.Label>
