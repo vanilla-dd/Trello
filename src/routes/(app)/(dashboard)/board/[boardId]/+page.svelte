@@ -3,6 +3,9 @@
 	export let data;
 </script>
 
+<svelte:head>
+	<title>{data.boardData?.title} | Taskify</title>
+</svelte:head>
 <!-- <p class="text-black">
 	{JSON.stringify(data.isBoardMember)}
 </p> -->

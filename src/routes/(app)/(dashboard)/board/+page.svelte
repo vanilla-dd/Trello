@@ -7,6 +7,9 @@
 	export let data;
 </script>
 
+<svelte:head>
+	<title>Boards | Taskify</title>
+</svelte:head>
 {#await data.allBoards?.boards}
 	<div class="w-full h-20 mb-10">
 		<Skeleton class=" h-full w-full p-2 bg-slate-200" />
