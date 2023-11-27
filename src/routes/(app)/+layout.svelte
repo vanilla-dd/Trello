@@ -14,7 +14,7 @@
 		<Navbar />
 		<Footer />
 	{/if}
-	<main class="bg-slate-100 pb-20 pt-40">
+	<main class="bg-slate-100 pb-10 pt-20">
 		<slot />
 	</main>
 </div>

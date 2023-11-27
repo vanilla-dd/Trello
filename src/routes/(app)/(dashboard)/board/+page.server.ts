@@ -8,21 +8,22 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (!user?.user) {
 		return;
 	}
-	const allBoards = await prisma.board.findMany({
-		where: {
-			members: {
-				some: {
-					userId: user.user.id,
-					role: {
-						in: ['Owner', 'Watcher', 'Coworker']
+	const allBoards = async () =>
+		await prisma.board.findMany({
+			where: {
+				members: {
+					some: {
+						userId: user?.user?.id,
+						role: {
+							in: ['Owner', 'Watcher', 'Coworker']
+						}
 					}
 				}
 			}
-		}
-	});
+		});
 	return {
 		form: superValidate(boardCreateSchema),
-		allBoards
+		allBoards: { boards: allBoards() }
 	};
 };
 export const actions: Actions = {
