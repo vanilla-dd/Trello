@@ -1,4 +1,5 @@
 <script>
+	import BoardNameChange from '$lib/forms/BoardNameChange.svelte';
 	import ListForm from '$lib/list/ListForm.svelte';
 	export let data;
 </script>
@@ -6,45 +7,59 @@
 <svelte:head>
 	<title>{data.boardData?.title} | Taskify</title>
 </svelte:head>
-<!-- <p class="text-black">
-	{JSON.stringify(data.isBoardMember)}
-</p> -->
+<main class="h-[100dvh] pt-14">
+	<div
+		class="w-full h-14 z-[40] bg-black/50 fixed top-14 flex items-center px-6 gap-x-4 text-white"
+	>
+		{#if data.isBoardMember?.role === 'Owner'}
+			<BoardNameChange />
+		{:else}
+			<p class="font-bold w-auto h-auto p-1 px-2 text-lg bg-transparent text-white">
+				{data.boardData?.title}
+			</p>
+		{/if}
+	</div>
+	<div
+		style="background-image:url('{data.boardData?.imageFullUrl}')"
+		class="relative h-full bg-cover bg-no-repeat bg-center pt-20"
+	>
+		<!-- {#if data.isBoardMember?.role === 'Owner'}
+			<form action="?/addMember" method="POST">
+				<input type="text" name="id" value="clp8jhdys0000141jq6xjnmd9" />
+				<select name="role" id="">
+					<option value="Coworker">Coworker</option>
+					<option value="Watcher">Watcher</option>
+				</select>
+				<button>Submit</button>
+			</form>
+		{/if} -->
+		{#if data.isBoardMember?.role === 'Owner' || data.isBoardMember?.role === 'Coworker'}
+			<ListForm form={data.form} />
+		{/if}
+		<div class="text-black">
+			<div class="flex gap-5 flex-col">
+				{#each data.lists || [] as list}
+					<br />
+					{list.title}
+					<div class="text-white">
+						{#each list.cards as card}
+							{card.listId}
+							{card.title}
+							{card.content}
+						{/each}
+					</div>
 
-{#if data.isBoardMember?.role === 'Owner'}
-	<form action="?/addMember" method="POST">
-		<input type="text" name="id" value="clp8jhdys0000141jq6xjnmd9" />
-		<select name="role" id="">
-			<option value="Coworker">Coworker</option>
-			<option value="Watcher">Watcher</option>
-		</select>
-		<button>Submit</button>
-	</form>
-{/if}
-{#if data.isBoardMember?.role === 'Owner' || data.isBoardMember?.role === 'Coworker'}
-	<ListForm form={data.form} />
-{/if}
-<div class="text-black">
-	<div class="bg-red-300 flex gap-5 flex-col">
-		{#each data.lists || [] as list}
-			<br />
-			{list.title}
-			<div class="bg-black text-white">
-				{#each list.cards as card}
-					{card.listId}
-					{card.title}
-					{card.content}
+					{#if data.isBoardMember?.role === 'Owner' || data.isBoardMember?.role === 'Coworker'}
+						<form action="?/createCard" method="POST">
+							<input type="text" name="cardName" value="hi" />
+							<input type="text" name="listId" value={list.id} />
+							<input type="text" hidden class="hidden" name="boardId" value={list.boardId} />
+							<button>Create Card</button>
+						</form>
+						<br />
+					{/if}
 				{/each}
 			</div>
-
-			{#if data.isBoardMember?.role === 'Owner' || data.isBoardMember?.role === 'Coworker'}
-				<form action="?/createCard" method="POST">
-					<input type="text" name="cardName" value="hi" />
-					<input type="text" name="listId" value={list.id} />
-					<input type="text" hidden class="hidden" name="boardId" value={list.boardId} />
-					<button>Create Card</button>
-				</form>
-				<br />
-			{/if}
-		{/each}
+		</div>
 	</div>
-</div>
+</main>

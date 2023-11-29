@@ -38,7 +38,6 @@ export const actions: Actions = {
 				form
 			});
 		}
-		console.log(form.data);
 		const [imageId, imageThumbUrl, imageFullUrl, imageLinkHTML, imageUserName] =
 			form.data.imageId.split('|');
 		if (!imageId || !imageThumbUrl || !imageFullUrl || !imageLinkHTML || !imageUserName) {

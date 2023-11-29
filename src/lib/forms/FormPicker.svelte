@@ -34,6 +34,11 @@
 		<div class="grid grid-cols-3 mb-2 gap-2">
 			{#each images as image (image.id)}
 				<div
+					tabindex="0"
+					on:keypress={(e) => {
+						e.key === 'Enter' ? (selectedImage = image.id) : null;
+					}}
+					aria-roledescription="button"
 					class={cn(
 						'cursor-pointer relative aspect-video group hover:opacity-75 transition bg-muted',
 						pending && 'opacity-50 hover:opacity-50 cursor-auto'
@@ -63,9 +68,10 @@
 						class="object-cover aspect-video rounded-sm"
 					/>
 					<a
+						tabindex="-1"
 						href={image.links.html}
 						target="_blank"
-						class="opacity-0 group-hover:opacity-100 absolute bottom-0 w-full text-[8px] truncate text-right hover:underline px-1 bg-black/50"
+						class="opacity-0 group-focus-within:opacity-100 group-hover:opacity-100 absolute bottom-0 w-full text-[8px] truncate text-right hover:underline px-1 bg-black/50"
 					>
 						{image.user.name}
 					</a>

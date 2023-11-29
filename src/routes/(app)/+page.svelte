@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Medal } from 'lucide-svelte';
-	import { signIn, signOut } from "@auth/sveltekit/client"
+	import { signIn, signOut } from '@auth/sveltekit/client';
 </script>
 
 <svelte:head>
@@ -26,8 +26,12 @@
 	<meta property="og:image" content="https://trello-omega-clone.vercel.app/logo.png" />
 </svelte:head>
 
-<div class="flex flex-col items-center justify-center">
-	<button on:click={()=>{signIn()}}>ehlo</button>
+<div class="flex flex-col items-center justify-center pt-20">
+	<button
+		on:click={() => {
+			signIn();
+		}}>ehlo</button
+	>
 	<div class="flex flex-col items-center justify-center">
 		<div
 			class="mb-4 flex items-center rounded-full border bg-amber-100 p-4 uppercase text-amber-700 shadow-sm"

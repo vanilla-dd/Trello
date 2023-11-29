@@ -174,7 +174,7 @@ export const actions: Actions = {
 			orderBy: { position: 'desc' },
 			select: { position: true }
 		});
-		const newPosition = cardPosition ? +cardPosition + 1 : 1;
+		const newPosition = cardPosition?.position ? +cardPosition.position + 1 : 1;
 
 		await prisma.card.create({
 			data: {
@@ -186,21 +186,17 @@ export const actions: Actions = {
 						id: listId, // Replace with the actual list ID
 						boardId: boardId
 					}
-				},
-				attachments: {
-					create: [
-						{
-							filename: 'attachment1.img',
-							url: 'https://trello-omega-clone/logo.png'
-						}
-						// Add other attachments as needed
-					]
 				}
-				// ... other card fields
-			},
-			include: {
-				attachments: true
 			}
+		});
+	},
+	boardNameChange: async ({ request, params, locals }) => {
+		const user = await locals.getSession();
+		const data = Object.fromEntries(await request.formData());
+		console.log(data);
+		return data;
+		const changeName = await prisma.board.update({
+			where: { id: params.boardId }
 		});
 	}
 };
