@@ -10,7 +10,7 @@
 		}
 		if (editing && e.key === 'Escape') {
 			editing = false;
-			NameChange.submit();
+			NameChange.requestSubmit();
 		}
 	};
 	let NameChange: HTMLFormElement;
@@ -23,12 +23,12 @@
 		action="?/boardNameChange"
 		method="POST"
 		class="flex items-center gap-x-2"
-		use:enhance={({ formData, cancel }) => {
+		use:enhance={({ formData }) => {
 			const data = formData;
 			console.log(data);
 			return async ({ update, result }) => {
 				console.log(result);
-				await update();
+				await update({ reset: false });
 			};
 		}}
 	>
@@ -40,9 +40,11 @@
 			on:blur={(e) => {
 				boardName = e.currentTarget.value;
 				editing = false;
-				NameChange.submit();
+				NameChange.requestSubmit();
 			}}
-			autofocus
+			on:submit={(e) => {
+				editing = false;
+			}}
 		/>
 	</form>
 {:else}

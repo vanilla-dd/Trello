@@ -19,20 +19,11 @@
 			</p>
 		{/if}
 	</div>
-	<div
+</main>
+<!-- <div
 		style="background-image:url('{data.boardData?.imageFullUrl}')"
 		class="relative h-full bg-cover bg-no-repeat bg-center pt-20"
 	>
-		<!-- {#if data.isBoardMember?.role === 'Owner'}
-			<form action="?/addMember" method="POST">
-				<input type="text" name="id" value="clp8jhdys0000141jq6xjnmd9" />
-				<select name="role" id="">
-					<option value="Coworker">Coworker</option>
-					<option value="Watcher">Watcher</option>
-				</select>
-				<button>Submit</button>
-			</form>
-		{/if} -->
 		{#if data.isBoardMember?.role === 'Owner' || data.isBoardMember?.role === 'Coworker'}
 			<ListForm form={data.form} />
 		{/if}
@@ -62,4 +53,4 @@
 			</div>
 		</div>
 	</div>
-</main>
+</main> -->
