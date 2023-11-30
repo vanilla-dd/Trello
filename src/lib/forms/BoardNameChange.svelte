@@ -23,9 +23,12 @@
 		action="?/boardNameChange"
 		method="POST"
 		class="flex items-center gap-x-2"
-		use:enhance={({ cancel }) => {
+		use:enhance={({ formData, cancel }) => {
+			const data = formData;
+			console.log(data);
 			return async ({ update, result }) => {
-				await update({ invalidateAll: false, reset: false });
+				console.log(result);
+				await update();
 			};
 		}}
 	>

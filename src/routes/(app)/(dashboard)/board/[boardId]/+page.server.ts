@@ -190,13 +190,28 @@ export const actions: Actions = {
 			}
 		});
 	},
-	boardNameChange: async ({ request, params, locals }) => {
-		const user = await locals.getSession();
+	boardNameChange: async ({ url, request, locals }) => {
 		const data = Object.fromEntries(await request.formData());
-		console.log(data);
-		return data;
-		const changeName = await prisma.board.update({
-			where: { id: params.boardId }
+		const user = await locals.getSession();
+		if (!user?.user) {
+			return;
+		}
+		const existingMembership = await prisma.boardMembership.findUnique({
+			where: {
+				userId_boardId: {
+					userId: user?.user?.id,
+					boardId: url.pathname.split('/')[2]
+				}
+			},
+			select: { role: true }
 		});
+		if (existingMembership?.role !== 'Owner') {
+			return;
+		}
+		const changeName = await prisma.board.update({
+			where: { id: url.pathname.split('/')[2] },
+			data: { title: data.newName as string }
+		});
+		return { data, changeName };
 	}
 };
