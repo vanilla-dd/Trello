@@ -1,8 +1,10 @@
+// TODO: Better error handling and states all over severside
+
 import { prisma } from '$lib/server/db';
 import { fail, type Actions } from '@sveltejs/kit';
 import type { Role } from '@prisma/client';
 import type { PageServerLoad } from './$types';
-import { listCreateSchema } from '$lib/schema/formValidators';
+import { listCreateSchema, updateName } from '$lib/schema/formValidators';
 import { superValidate } from 'sveltekit-superforms/server';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
@@ -64,7 +66,6 @@ export const actions: Actions = {
 		const data = Object.fromEntries(await request.formData());
 		const id = data.id as string;
 		const role = data.role as Role;
-		console.log(url.pathname.split('/')[2]);
 		// const existingMembership = await prisma.boardMembership.findUnique({
 		//     where: { userId_boardId: { userId: userId, boardId: boardId } },
 		// });
@@ -208,10 +209,18 @@ export const actions: Actions = {
 		if (existingMembership?.role !== 'Owner') {
 			return;
 		}
+		// try {
+		// const { newName } = updateName.parse(data.newName);
 		const changeName = await prisma.board.update({
 			where: { id: url.pathname.split('/')[2] },
 			data: { title: data.newName as string }
 		});
 		return { data, changeName };
+		// } catch (e) {
+		// Todo Add better error handling on server side
+		// if (e) {
+		// return;
+		// }
+		// }
 	}
 };
