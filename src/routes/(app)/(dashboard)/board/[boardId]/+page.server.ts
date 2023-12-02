@@ -1,10 +1,10 @@
-// TODO: Better error handling and states all over severside
+// TODO: Better error handling and validation all over serverside
 
 import { prisma } from '$lib/server/db';
 import { fail, type Actions } from '@sveltejs/kit';
 import type { Role } from '@prisma/client';
 import type { PageServerLoad } from './$types';
-import { listCreateSchema, updateName } from '$lib/schema/formValidators';
+import { listCreateSchema } from '$lib/schema/formValidators';
 import { superValidate } from 'sveltekit-superforms/server';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
@@ -113,22 +113,15 @@ export const actions: Actions = {
 	},
 	createList: async (event) => {
 		const user = await event.locals.getSession();
+		const data = Object.fromEntries(await event.request.formData());
+		const { boardId, title } = listCreateSchema.parse(data);
 		if (!user?.user) {
 			return;
-		}
-		const form = await superValidate(event, listCreateSchema);
-		if (!user?.user) {
-			return;
-		}
-		if (!form.valid) {
-			return fail(400, {
-				form
-			});
 		}
 		const isBoardMember = await prisma.boardMembership.findFirst({
 			where: {
 				userId: user?.user.id,
-				boardId: event.url.pathname.split('/')[2],
+				boardId,
 				role: { in: ['Owner', 'Coworker'] }
 			}
 		});
@@ -137,15 +130,15 @@ export const actions: Actions = {
 			return;
 		}
 		const listPosition = await prisma.list.findFirst({
-			where: { boardId: event.url.pathname.split('/')[2] },
+			where: { boardId },
 			orderBy: { position: 'desc' },
 			select: { position: true }
 		});
 		const newPosition = listPosition?.position ? +listPosition.position + 1 : 1;
 		await prisma.list.create({
 			data: {
-				title: form.data.title,
-				boardId: event.url.pathname.split('/')[2],
+				title,
+				boardId,
 				position: newPosition
 			}
 		});
@@ -213,6 +206,38 @@ export const actions: Actions = {
 		// const { newName } = updateName.parse(data.newName);
 		const changeName = await prisma.board.update({
 			where: { id: url.pathname.split('/')[2] },
+			data: { title: data.newName as string }
+		});
+		return { data, changeName };
+		// } catch (e) {
+		// Todo Add better error handling on server side
+		// if (e) {
+		// return;
+		// }
+		// }
+	},
+	listNameChange: async ({ request, locals }) => {
+		const data = Object.fromEntries(await request.formData());
+		const user = await locals.getSession();
+		if (!user?.user) {
+			return;
+		}
+		const existingMembership = await prisma.boardMembership.findUnique({
+			where: {
+				userId_boardId: {
+					userId: user?.user?.id,
+					boardId: data.boardId as string
+				}
+			},
+			select: { role: true }
+		});
+		if (existingMembership?.role !== 'Coworker' && existingMembership?.role !== 'Owner') {
+			return;
+		}
+		// try {
+		// const { newName } = updateName.parse(data.newName);
+		const changeName = await prisma.list.update({
+			where: { id: data.listId as string, boardId: data.boardId as string },
 			data: { title: data.newName as string }
 		});
 		return { data, changeName };

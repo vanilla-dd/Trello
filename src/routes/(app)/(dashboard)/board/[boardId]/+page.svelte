@@ -1,6 +1,6 @@
 <script>
+	import ListItems from '$lib/components/ListItems.svelte';
 	import BoardNameChange from '$lib/forms/BoardNameChange.svelte';
-	import ListForm from '$lib/list/ListForm.svelte';
 	export let data;
 </script>
 
@@ -13,21 +13,21 @@
 	>
 		{#if data.isBoardMember?.role === 'Owner'}
 			<BoardNameChange />
+			<div class="ml-auto"></div>
 		{:else}
 			<p class="font-bold w-auto h-auto p-1 px-2 text-lg bg-transparent text-white">
 				{data.boardData?.title}
 			</p>
 		{/if}
 	</div>
-</main>
-<!-- <div
+	<div
 		style="background-image:url('{data.boardData?.imageFullUrl}')"
-		class="relative h-full bg-cover bg-no-repeat bg-center pt-20"
+		class="relative h-full bg-cover bg-no-repeat bg-center pt-20 overflow-x-scroll no-scrollbar"
 	>
-		{#if data.isBoardMember?.role === 'Owner' || data.isBoardMember?.role === 'Coworker'}
-			<ListForm form={data.form} />
+		{#if data.lists}
+			<ListItems lists={data.lists} />
 		{/if}
-		<div class="text-black">
+		<!-- <div class="text-black">
 			<div class="flex gap-5 flex-col">
 				{#each data.lists || [] as list}
 					<br />
@@ -51,6 +51,19 @@
 					{/if}
 				{/each}
 			</div>
-		</div>
+		</div> -->
 	</div>
-</main> -->
+</main>
+
+<style>
+	/* Hide scrollbar for Chrome, Safari and Opera */
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+
+	/* Hide scrollbar for IE, Edge and Firefox */
+	.no-scrollbar {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+</style>

@@ -18,7 +18,8 @@ export const listCreateSchema = z.object({
 		.string({ required_error: "Title can't be empty" })
 		.min(1)
 		.max(26, { message: "Title shoudn't be longer than 26 characters" })
-		.trim()
+		.trim(),
+	boardId: z.string({ required_error: "Can't Create List" })
 });
 export const updateName = z.object({
 	newName: z
