@@ -29,29 +29,29 @@
 		{/if}
 		<!-- <div class="text-black">
 			<div class="flex gap-5 flex-col">
-				{#each data.lists || [] as list}
-					<br />
-					{list.title}
-					<div class="text-white">
-						{#each list.cards as card}
-							{card.listId}
-							{card.title}
-							{card.content}
-						{/each}
-					</div>
-
-					{#if data.isBoardMember?.role === 'Owner' || data.isBoardMember?.role === 'Coworker'}
-						<form action="?/createCard" method="POST">
-							<input type="text" name="cardName" value="hi" />
-							<input type="text" name="listId" value={list.id} />
-							<input type="text" hidden class="hidden" name="boardId" value={list.boardId} />
-							<button>Create Card</button>
-						</form>
-						<br />
-					{/if}
+				<br />
+				{list.title}
+				<div class="text-white">
+					{#each list.cards as card}
+					{card.listId}
+					{card.title}
+					{card.content}
+				</div>
+				<br />
 				{/each}
 			</div>
 		</div> -->
+
+		{#each data.lists || [] as list}
+			{#if data.isBoardMember?.role === 'Owner' || data.isBoardMember?.role === 'Coworker'}
+				<form action="?/createCard" method="POST">
+					<input type="text" name="cardName" value="hi" />
+					<input type="text" name="listId" value={list.id} />
+					<input type="text" hidden class="hidden" name="boardId" value={list.boardId} />
+					<button>Create Card</button>
+				</form>
+			{/if}
+		{/each}
 	</div>
 </main>
 

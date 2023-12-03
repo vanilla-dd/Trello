@@ -1,10 +1,10 @@
 <!-- TODO: Validation for list name update -->
 <script lang="ts">
+	export let data: List;
 	import type { List } from '@prisma/client';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { enhance } from '$app/forms';
 	import toast from 'svelte-french-toast';
-	export let data: List;
 	let listName = data.title;
 	let NameChange: HTMLFormElement;
 	let updating: boolean;
@@ -45,36 +45,42 @@
 
 			return async ({ update, result }) => {
 				if (result.type === 'success') {
-					toast.success('Board Title Updated');
+					toast.success('List Title Updated');
 				}
 				if (result.type === 'failure') {
-					toast.error('Failed to update Board title');
+					toast.error('Failed to update List title');
 				}
 				updating = false;
 				await update({ reset: false });
 			};
 		}}
 	>
-		<input
-			type="text"
-			class="bg-transparent outline-none font-bold text-white text-lg w-auto h-fit pl-2"
-			name="newName"
-			autofocus
-			value={data.title}
-			on:blur={(e) => {
-				listName = e.currentTarget.value;
-				editing = false;
-				NameChange.requestSubmit();
-			}}
-			on:keydown={(e) => {
-				if (e.key === 'Enter') {
-					e.currentTarget.blur();
-					editing = false;
-				}
-			}}
-		/>
-		<input type="text" hidden class="hidden" value={data.id} name="listId" />
-		<input type="text" hidden class="hidden" value={data.boardId} name="boardId" />
+		<div class="rounded-md bg-[#f1f2f4] shadow-md pb-2">
+			<div class="pt-2 text-sm font-semibold">
+				<div class="w-full text-black py-1 h-7 font-medium border-transparent">
+					<input
+						type="text"
+						class="bg-transparent outline-none text-sm h-fit text-center w-[272px]"
+						name="newName"
+						autofocus
+						value={data.title}
+						on:blur={(e) => {
+							listName = e.currentTarget.value;
+							editing = false;
+							NameChange.requestSubmit();
+						}}
+						on:keydown={(e) => {
+							if (e.key === 'Enter') {
+								e.currentTarget.blur();
+								editing = false;
+							}
+						}}
+					/>
+					<input type="text" hidden class="hidden" value={data.id} name="listId" />
+					<input type="text" hidden class="hidden" value={data.boardId} name="boardId" />
+				</div>
+			</div>
+		</div>
 	</form>
 {:else}
 	<Button
