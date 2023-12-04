@@ -37,12 +37,12 @@
 		bind:this={form}
 		action="?/createList"
 		method="POST"
-		class="w-full p-3 rounded-md bg-white space-y-4 shadow-md transition"
+		class="w-full space-y-4 rounded-md bg-white p-3 shadow-md transition"
 	>
 		<input
 			type="text"
 			name="title"
-			class="text-sm px-2 py-1 h-7 font-medium border-transparent hover:border-input focus:border-input transition w-full text-black"
+			class="h-7 w-full border-transparent px-2 py-1 text-sm font-medium text-black transition hover:border-input focus:border-input"
 			placeholder="Enter list title..."
 			bind:value={ListName}
 			autofocus
@@ -65,10 +65,10 @@
 	</form>
 {:else}
 	<button
-		class="w-full rounded-md bg-white hover:bg-white/50 items-center p-3 font-medium text-sm transition text-black flex"
+		class="flex w-full items-center rounded-md bg-white p-3 text-sm font-medium text-black transition hover:bg-white/50"
 		on:click={() => (editing = true)}
 	>
-		<Plus class="h-4 mr-2 w-4" />
+		<Plus class="mr-2 h-4 w-4" />
 		Add a list</button
 	>
 {/if}

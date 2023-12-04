@@ -6,8 +6,8 @@
 	<div class="mx-auto flex w-full items-center justify-between md:max-w-screen-2xl">
 		<Logo />
 		<div class="flex w-full items-center justify-between space-x-4 md:block md:w-auto">
-			<a class="text-black underline font-semibold underline-offset-2" href="/">Privacy Policy</a>
-			<a class="text-black underline font-semibold underline-offset-2" href="/">Terms of Service</a>
+			<a class="font-semibold text-black underline underline-offset-2" href="/">Privacy Policy</a>
+			<a class="font-semibold text-black underline underline-offset-2" href="/">Terms of Service</a>
 		</div>
 	</div>
 </div>

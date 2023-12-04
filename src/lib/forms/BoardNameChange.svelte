@@ -55,7 +55,7 @@
 	>
 		<input
 			type="text"
-			class="bg-transparent outline-none font-bold text-white text-lg w-auto h-auto pl-2"
+			class="h-auto w-auto bg-transparent pl-2 text-lg font-bold text-white outline-none"
 			name="newName"
 			autofocus
 			value={boardName}
@@ -78,7 +78,7 @@
 			editing = true;
 		}}
 		disabled={updating}
-		class="font-bold w-auto h-auto p-1 px-2 text-lg bg-transparent shadow-none hover:bg-white/20 text-white"
+		class="h-auto w-auto bg-transparent p-1 px-2 text-lg font-bold text-white shadow-none hover:bg-white/20"
 		>{boardName}</Button
 	>
 {/if}

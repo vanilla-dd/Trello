@@ -55,12 +55,12 @@
 			};
 		}}
 	>
-		<div class="rounded-md bg-[#f1f2f4] shadow-md pb-2">
+		<div class="rounded-md bg-[#f1f2f4] pb-2 shadow-md">
 			<div class="pt-2 text-sm font-semibold">
-				<div class="w-full text-black py-1 h-7 font-medium border-transparent">
+				<div class="h-7 w-full border-transparent py-1 font-medium text-black">
 					<input
 						type="text"
-						class="bg-transparent outline-none text-sm h-fit text-center w-[272px]"
+						class="h-fit w-[272px] bg-transparent text-center text-sm outline-none"
 						name="newName"
 						autofocus
 						value={data.title}
@@ -88,11 +88,11 @@
 			editing = true;
 		}}
 		disabled={updating}
-		class="shrink-0 m-0 p-0 h-fit w-[272px] select-none"
+		class="m-0 h-fit w-[272px] shrink-0 select-none p-0"
 	>
-		<div class="w-full rounded-md bg-[#f1f2f4] shadow-md pb-2">
-			<div class="pt-2 px-2 text-sm font-semibold flex justify-between items-start gap-x-2">
-				<div class="w-full text-black text-sm px-2.5 py-1 h-7 font-medium border-transparent">
+		<div class="w-full rounded-md bg-[#f1f2f4] pb-2 shadow-md">
+			<div class="flex items-start justify-between gap-x-2 px-2 pt-2 text-sm font-semibold">
+				<div class="h-7 w-full border-transparent px-2.5 py-1 text-sm font-medium text-black">
 					{listName}
 				</div>
 			</div>

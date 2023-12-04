@@ -26,12 +26,12 @@
 </script>
 
 {#if loading}
-	<div class="p-6 flex items-center justify-center">
-		<Loader2 class="h-6 w-6 text-sky-700 animate-spin" />
+	<div class="flex items-center justify-center p-6">
+		<Loader2 class="h-6 w-6 animate-spin text-sky-700" />
 	</div>
 {:else}
 	<div class="relative">
-		<div class="grid grid-cols-3 mb-2 gap-2">
+		<div class="mb-2 grid grid-cols-3 gap-2">
 			{#each images as image (image.id)}
 				<div
 					tabindex="0"
@@ -40,8 +40,8 @@
 					}}
 					aria-roledescription="button"
 					class={cn(
-						'cursor-pointer relative aspect-video group hover:opacity-75 transition bg-muted',
-						pending && 'opacity-50 hover:opacity-50 cursor-auto'
+						'group relative aspect-video cursor-pointer bg-muted transition hover:opacity-75',
+						pending && 'cursor-auto opacity-50 hover:opacity-50'
 					)}
 					on:click={() => (selectedImage = image.id)}
 				>
@@ -57,7 +57,7 @@
 					/>
 					{#if selectedImage === image.id}
 						<div
-							class="absolute inset-y-0 h-full w-full bg-black/30 flex items-center justify-center"
+							class="absolute inset-y-0 flex h-full w-full items-center justify-center bg-black/30"
 						>
 							<Check class="h-4 w-4 text-white" />
 						</div>
@@ -65,13 +65,13 @@
 					<img
 						src={image.urls.thumb}
 						alt="Unspalsh Images"
-						class="object-cover aspect-video rounded-sm"
+						class="aspect-video rounded-sm object-cover"
 					/>
 					<a
 						tabindex="-1"
 						href={image.links.html}
 						target="_blank"
-						class="opacity-0 group-focus-within:opacity-100 group-hover:opacity-100 absolute bottom-0 w-full text-[8px] truncate text-right hover:underline px-1 bg-black/50"
+						class="absolute bottom-0 w-full truncate bg-black/50 px-1 text-right text-[8px] opacity-0 hover:underline group-focus-within:opacity-100 group-hover:opacity-100"
 					>
 						{image.user.name}
 					</a>

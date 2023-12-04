@@ -28,7 +28,7 @@
 	}
 </script>
 
-<ol class="flex gap-x-3 h-full">
+<ol class="flex h-full gap-x-3">
 	<section
 		class="board"
 		use:dndzone={{ items: lists, flipDurationMs, type: 'columns' }}
@@ -53,7 +53,7 @@
 			</div>
 		{/each}
 	</section>
-	<li class="shrink-0 h-full w-[272px] select-none list-none">
+	<li class="h-full w-[272px] shrink-0 select-none list-none">
 		{#if $page.data.isBoardMember?.role === 'Owner' || $page.data.isBoardMember?.role === 'Coworker'}
 			<ListForm />
 		{/if}

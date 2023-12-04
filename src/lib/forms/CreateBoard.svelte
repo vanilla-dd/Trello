@@ -30,7 +30,7 @@
 		}
 	}}
 >
-	<div class="text-sm font-medium text-center pb-4 text-neutral-400">Create Board</div>
+	<div class="pb-4 text-center text-sm font-medium text-neutral-400">Create Board</div>
 	<FormPicker pending={delayed} />
 	<Form.Field {config} name="title">
 		<Form.Item>
@@ -54,10 +54,10 @@
 			<Form.Validation />
 		</Form.Item>
 	</Form.Field>
-	<Form.Button disabled={delayed} class="flex gap-2 items-center font-bold justify-center"
+	<Form.Button disabled={delayed} class="flex items-center justify-center gap-2 font-bold"
 		>Create
 		{#if delayed}
-			<Loader2 class="animate-spin w-4 h-4" />
+			<Loader2 class="h-4 w-4 animate-spin" />
 		{/if}
 	</Form.Button>
 </Form.Root>
