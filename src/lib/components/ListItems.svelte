@@ -2,92 +2,54 @@
 	import { page } from '$app/stores';
 	import ListForm from '$lib/list/ListForm.svelte';
 	import type { List } from '@prisma/client';
+	import CardForm from './CardForm.svelte';
 	import ListItem from './ListItem.svelte';
+	import CardItem from './CardItem.svelte';
+	import { cn } from '$lib/utils';
 	export let lists: List[];
-	import { flip } from 'svelte/animate';
-	import { dndzone } from 'svelte-dnd-action';
-	const flipDurationMs = 200;
-	function handleDndConsiderColumns(e) {
-		lists = e.detail.items;
-	}
-	function handleDndFinalizeColumns(e) {
-		lists = e.detail.items;
-	}
-	function handleDndConsiderCards(cid, e) {
-		const colIdx = lists.findIndex((c) => c.id === cid);
-		lists[colIdx].cards = e.detail.items;
-		lists = [...lists];
-	}
-	function handleDndFinalizeCards(cid, e) {
-		const colIdx = lists.findIndex((c) => c.id === cid);
-		lists[colIdx].cards = e.detail.items;
-		lists = [...lists];
-	}
-	function handleClick(e) {
-		alert('dragabble elements are still clickable :)');
-	}
 </script>
 
-<ol class="flex h-full gap-x-3">
-	<section
-		class="board"
-		use:dndzone={{ items: lists, flipDurationMs, type: 'columns' }}
-		on:consider={handleDndConsiderColumns}
-		on:finalize={handleDndFinalizeColumns}
-	>
-		{#each lists as list (list.id)}
-			<div class="column" animate:flip={{ duration: flipDurationMs }}>
-				<div class="column-title"><ListItem data={list} /></div>
-				<div
-					class="column-content"
-					use:dndzone={{ items: list.cards, flipDurationMs }}
-					on:consider={(e) => handleDndConsiderCards(list.id, e)}
-					on:finalize={(e) => handleDndFinalizeCards(list.id, e)}
+<div class="flex w-[300px] items-start gap-5 px-3">
+	{#each lists as list (list.id)}
+		<div
+			class="no-scrollbar w-full flex-shrink-0 overflow-hidden overflow-y-hidden rounded-md bg-[#f1f2f4] pb-2 shadow-md"
+		>
+			<ListItem data={list} />
+			<div class="no-scrollbar h-full overflow-y-scroll">
+				<ol
+					class={cn(
+						'mx-1 flex flex-col gap-y-2 px-1 py-0.5',
+						list.cards.length > 0 ? 'mt-2' : 'mt-0'
+					)}
 				>
-					{#each list.cards as item (item.id)}
-						<div class="card" animate:flip={{ duration: flipDurationMs }} on:click={handleClick}>
-							{item.title}
-						</div>
+					{#each list.cards as card (card.id)}
+						<CardItem {card} />
 					{/each}
-				</div>
+				</ol>
+				{#if $page.data.isBoardMember?.role === 'Owner' || $page.data.isBoardMember?.role === 'Coworker'}
+					<CardForm boardId={list.boardId} listId={list.id} />
+				{/if}
 			</div>
-		{/each}
-	</section>
+		</div>
+	{/each}
 	<li class="h-full w-[272px] shrink-0 select-none list-none">
 		{#if $page.data.isBoardMember?.role === 'Owner' || $page.data.isBoardMember?.role === 'Coworker'}
 			<ListForm />
 		{/if}
 	</li>
-</ol>
+</div>
 
 <style>
-	.board {
-		height: 90vh;
-		width: 100%;
-		padding: 0.5em;
-		margin-bottom: 40px;
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
 	}
-	.column {
-		height: 100%;
-		width: 250px;
-		padding: 0.5em;
-		margin: 1em;
-		float: left;
-		border: 1px solid #333333;
-		/*Notice we make sure this container doesn't scroll so that the title stays on top and the dndzone inside is scrollable*/
-		overflow-y: hidden;
+
+	/* Hide scrollbar for IE, Edge and Firefox */
+	.no-scrollbar {
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
 	}
-	.column-content {
-		height: 100%;
-		/* Notice that the scroll container needs to be the dndzone if you want dragging near the edge to trigger scrolling */
-		overflow-y: scroll;
-	}
-	.column-title {
-		margin-bottom: 1em;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
+
 	.card {
 		height: 15%;
 		width: 100%;

@@ -151,10 +151,12 @@ export const actions: Actions = {
 		const data = Object.fromEntries(await request.formData());
 		const listId = data.listId as string;
 		const boardId = data.boardId as string;
+		const cardContent = data.cardContent as string;
+		const cardTitle = data.cardTitle as string;
 		const isBoardMember = await prisma.boardMembership.findFirst({
 			where: {
 				userId: user?.user.id,
-				boardId: url.pathname.split('/')[2],
+				boardId: boardId,
 				role: { in: ['Owner', 'Coworker'] }
 			}
 		});
@@ -172,13 +174,13 @@ export const actions: Actions = {
 
 		await prisma.card.create({
 			data: {
-				title: 'Task 1',
-				content: 'Complete task by EOD',
+				title: cardTitle,
+				content: cardContent,
 				position: newPosition,
 				list: {
 					connect: {
 						id: listId, // Replace with the actual list ID
-						boardId: boardId
+						boardId
 					}
 				}
 			}
@@ -241,6 +243,38 @@ export const actions: Actions = {
 			data: { title: data.newName as string }
 		});
 		return { data, changeName };
+		// } catch (e) {
+		// Todo Add better error handling on server side
+		// if (e) {
+		// return;
+		// }
+		// }
+	},
+	cardContentUpdate: async ({ url, request, locals }) => {
+		const data = Object.fromEntries(await request.formData());
+		const user = await locals.getSession();
+		if (!user?.user) {
+			return;
+		}
+		const existingMembership = await prisma.boardMembership.findUnique({
+			where: {
+				userId_boardId: {
+					userId: user?.user?.id,
+					boardId: url.pathname.split('/')[2]
+				}
+			},
+			select: { role: true }
+		});
+		if (existingMembership?.role !== 'Owner' && existingMembership?.role !== 'Coworker') {
+			return;
+		}
+		// try {
+		// const { newName } = updateName.parse(data.newName);
+		const updateCardContent = await prisma.card.update({
+			where: { listId: data.listId as string, id: data.cardId as string },
+			data: { content: data.cardContent as string }
+		});
+		return { data, updateCardContent };
 		// } catch (e) {
 		// Todo Add better error handling on server side
 		// if (e) {

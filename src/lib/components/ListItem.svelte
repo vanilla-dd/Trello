@@ -55,7 +55,7 @@
 			};
 		}}
 	>
-		<div class="rounded-md bg-[#f1f2f4] pb-2 shadow-md">
+		<div class="rounded-md pb-2 shadow-md">
 			<div class="pt-2 text-sm font-semibold">
 				<div class="h-7 w-full border-transparent py-1 font-medium text-black">
 					<input
@@ -88,14 +88,12 @@
 			editing = true;
 		}}
 		disabled={updating}
-		class="m-0 h-fit w-[272px] shrink-0 select-none p-0"
+		class="m-0 h-fit w-[276px] shrink-0 select-none p-0 pt-2 text-sm font-semibold"
 	>
-		<div class="w-full rounded-md bg-[#f1f2f4] pb-2 shadow-md">
-			<div class="flex items-start justify-between gap-x-2 px-2 pt-2 text-sm font-semibold">
-				<div class="h-7 w-full border-transparent px-2.5 py-1 text-sm font-medium text-black">
-					{listName}
-				</div>
-			</div>
+		<div
+			class="h-7 w-full rounded-md border-transparent py-1 pb-8 text-sm font-medium text-black shadow-md"
+		>
+			{listName}
 		</div>
 	</Button>
 {/if}
