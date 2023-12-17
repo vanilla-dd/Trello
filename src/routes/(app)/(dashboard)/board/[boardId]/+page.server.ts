@@ -1,7 +1,7 @@
 // TODO: Better error handling and validation all over serverside
 
 import { prisma } from '$lib/server/db';
-import { fail, type Actions } from '@sveltejs/kit';
+import type { Actions } from '@sveltejs/kit';
 import type { Role } from '@prisma/client';
 import type { PageServerLoad } from './$types';
 import { listCreateSchema } from '$lib/schema/formValidators';
@@ -143,7 +143,7 @@ export const actions: Actions = {
 			}
 		});
 	},
-	createCard: async ({ request, locals, url }) => {
+	createCard: async ({ request, locals }) => {
 		const user = await locals.getSession();
 		if (!user?.user) {
 			return;
