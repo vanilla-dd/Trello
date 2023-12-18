@@ -7,6 +7,7 @@ export const PATCH: RequestHandler = async ({ locals, request }) => {
 		return json('Please Log In', { status: 401 });
 	}
 	const body: { item: List; index: number } = await request.json();
+	console.log(body.item);
 	if (!body || !body.item || !body.index) {
 		return;
 	}

@@ -8,6 +8,7 @@
 	import ListForm from '$lib/list/ListForm.svelte';
 	import ListItem from './ListItem.svelte';
 	import CardItem from './CardItem.svelte';
+	import Card from './ui/card/card.svelte';
 	type List = {
 		id: string;
 		title: string;
@@ -35,7 +36,6 @@
 	// 	});
 	// }
 	export let lists: List[];
-	console.log(lists);
 	const flipDurationMs = 200;
 	function handleDndConsiderColumns(e: CustomEvent<DndEvent<List>>) {
 		lists = e.detail.items;
@@ -47,7 +47,7 @@
 				return;
 			}
 			if (item.position !== index + 1) {
-				fetch('/api/update', { body: JSON.stringify({ item, index }), method: 'PATCH' });
+				fetch('/api/updateList', { body: JSON.stringify({ item, index }), method: 'PATCH' });
 			}
 		});
 	}
@@ -60,7 +60,18 @@
 		const colIdx = lists.findIndex((c) => c.id === cid);
 		lists[colIdx].cards = e.detail.items;
 		lists = [...lists];
-		console.log(cid, e);
+		e.detail.items.map((item: Card, index: number) => {
+			if (item.position === index + 1 && item.listId === cid) {
+				return;
+			}
+			if (item.position !== index + 1 && item.listId === cid) {
+				console.log(item, index);
+				fetch('/api/updateCard', {
+					body: JSON.stringify({ item: { id: item.id, listId: item.listId }, index }),
+					method: 'POST'
+				});
+			}
+		});
 	}
 	function handleClick(e: CustomEvent<DndEvent>) {
 		alert('dragabble elements are still clickable :)');
