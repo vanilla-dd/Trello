@@ -37,7 +37,8 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		where: { id: boardId },
 		include: {
 			lists: {
-				include: { cards: { orderBy: { position: 'asc' } } }
+				include: { cards: { orderBy: { position: 'asc' } } },
+				orderBy: { position: 'asc' }
 			},
 			members: {
 				select: {

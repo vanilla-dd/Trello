@@ -36,24 +36,19 @@
 	// }
 	export let lists: List[];
 	console.log(lists);
-
 	const flipDurationMs = 200;
 	function handleDndConsiderColumns(e: CustomEvent<DndEvent<List>>) {
 		lists = e.detail.items;
 	}
 	function handleDndFinalizeColumns(e: CustomEvent<DndEvent<List>>) {
 		lists = e.detail.items;
-		e.detail.items.map((item, index) => {
-			console.log(index + 1, $page.data.lists[index].position);
-			console.log(index + 1 === item.position);
-			// if (item.position === index + 1) {
-			// console.log(item.position, index + 1);
-			// return;
-			// }
-			// if (item.position !== index + 1) {
-			// console.log(item.position, index + 1);
-			// fetch('/api/update', { body: JSON.stringify({ item, index }), method: 'PATCH' });
-			// }
+		e.detail.items.map((item: List, index: number) => {
+			if (item.position === index + 1) {
+				return;
+			}
+			if (item.position !== index + 1) {
+				fetch('/api/update', { body: JSON.stringify({ item, index }), method: 'PATCH' });
+			}
 		});
 	}
 	function handleDndConsiderCards(cid: string, e: CustomEvent<DndEvent<Card>>) {
@@ -65,6 +60,7 @@
 		const colIdx = lists.findIndex((c) => c.id === cid);
 		lists[colIdx].cards = e.detail.items;
 		lists = [...lists];
+		console.log(cid, e);
 	}
 	function handleClick(e: CustomEvent<DndEvent>) {
 		alert('dragabble elements are still clickable :)');
