@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { HelpCircle } from 'lucide-svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { Button } from '$lib/components/ui/button';
-	import { HelpCircle } from 'lucide-svelte';
 </script>
 
 <Tooltip.Root closeDelay={700} openDelay={300} positioning={{ placement: 'bottom-end' }}>

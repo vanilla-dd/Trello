@@ -1,3 +1,5 @@
+// TODO : Better Error Handling
+
 import { prisma } from '$lib/server/db';
 import type { List } from '@prisma/client';
 import { json, type RequestHandler } from '@sveltejs/kit';
@@ -7,10 +9,9 @@ export const PATCH: RequestHandler = async ({ locals, request }) => {
 		return json('Please Log In', { status: 401 });
 	}
 	const body: { item: List; index: number } = await request.json();
-	console.log(body.item);
-	if (!body || !body.item || !body.index) {
-		return;
-	}
+	// if (!body || !body.item || !body.index) {
+	// return json('Please Log In', { status: 404 });
+	// }
 	const isBoardMember = await prisma.boardMembership.findFirst({
 		where: {
 			userId: user?.user.id,
@@ -20,7 +21,7 @@ export const PATCH: RequestHandler = async ({ locals, request }) => {
 	});
 	if (!isBoardMember) {
 		console.log('nada');
-		return;
+		return json('Please Log In', { status: 404 });
 	}
 	const updateData = async (item: List, index: number) => {
 		await prisma.list.update({

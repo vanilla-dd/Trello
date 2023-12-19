@@ -1,10 +1,10 @@
-// TODO: Better error handling and validation all over serverside
+// TODO: Better error handling and validation all over serverside and full refactoring
 
 import { prisma } from '$lib/server/db';
 import type { Actions } from '@sveltejs/kit';
 import type { Role } from '@prisma/client';
 import type { PageServerLoad } from './$types';
-import { listCreateSchema } from '$lib/schema/formValidators';
+import { listCreateSchema } from '$lib/validator/formValidators';
 import { superValidate } from 'sveltekit-superforms/server';
 
 export const load: PageServerLoad = async ({ params, locals }) => {

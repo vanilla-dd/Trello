@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Button from '$lib/components/ui/button/button.svelte';
-	import { updateName } from '$lib/schema/formValidators';
 	import toast from 'svelte-french-toast';
 	import { page } from '$app/stores';
 	import { enhance } from '$app/forms';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { updateName } from '$lib/validator/formValidators';
 	let boardName: string = $page.data.boardData.title;
 	let NameChange: HTMLFormElement;
 	let updating: boolean;

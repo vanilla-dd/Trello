@@ -1,7 +1,7 @@
 <script lang="ts">
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import Logo from '../Logo.svelte';
 	import { page } from '$app/stores';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import Logo from './Logo.svelte';
 </script>
 
 <nav class="fixed top-0 z-50 flex h-14 w-full items-center border-b bg-white px-4 shadow-sm">

@@ -1,14 +1,14 @@
 <!-- TODO: Validation for list name update -->
 <script lang="ts">
-	export let listId: string;
-	export let boardId: string;
-	import * as Card from '$lib/components/ui/card';
-	import { Input } from '$lib/components/ui/input';
-	import Button from '$lib/components/ui/button/button.svelte';
 	import { enhance } from '$app/forms';
 	import toast from 'svelte-french-toast';
 	import { Plus } from 'lucide-svelte';
+	import * as Card from '$lib/components/ui/card';
+	import { Input } from '$lib/components/ui/input';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
+	export let boardId: string;
+	export let listId: string;
 	let newCardFrom: HTMLFormElement;
 	let updating: boolean;
 	let editing: boolean = false;

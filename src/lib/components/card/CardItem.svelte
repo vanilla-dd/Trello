@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { Card } from '@prisma/client';
-
 	export let card: Card;
 </script>
 

@@ -4,11 +4,10 @@
 	import { cn } from '$lib/utils';
 	import { flip } from 'svelte/animate';
 	import { page } from '$app/stores';
-	import CardForm from './CardForm.svelte';
-	import ListForm from '$lib/list/ListForm.svelte';
+	import ListForm from '$lib/forms/ListForm.svelte';
 	import ListItem from './ListItem.svelte';
-	import CardItem from './CardItem.svelte';
-	import Card from './ui/card/card.svelte';
+	import CardForm from '../card/CardForm.svelte';
+	import CardItem from '../card/CardItem.svelte';
 	type List = {
 		id: string;
 		title: string;
@@ -42,12 +41,15 @@
 	}
 	function handleDndFinalizeColumns(e: CustomEvent<DndEvent<List>>) {
 		lists = e.detail.items;
-		e.detail.items.map((item: List, index: number) => {
+		e.detail.items.map(async (item: List, index: number) => {
 			if (item.position === index + 1) {
 				return;
 			}
 			if (item.position !== index + 1) {
-				fetch('/api/updateList', { body: JSON.stringify({ item, index }), method: 'PATCH' });
+				fetch('/api/updateList', {
+					body: JSON.stringify({ item, index }),
+					method: 'PATCH'
+				});
 			}
 		});
 	}
@@ -68,7 +70,7 @@
 				console.log(item, index);
 				fetch('/api/updateCard', {
 					body: JSON.stringify({ item: { id: item.id, listId: item.listId }, index }),
-					method: 'POST'
+					method: 'PATCH'
 				});
 			}
 		});

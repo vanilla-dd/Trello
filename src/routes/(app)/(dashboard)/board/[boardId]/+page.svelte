@@ -1,5 +1,5 @@
 <script>
-	import ListItems from '$lib/components/ListItems.svelte';
+	import ListItems from '$lib/components/list/ListItems.svelte';
 	import BoardNameChange from '$lib/forms/BoardNameChange.svelte';
 	export let data;
 </script>

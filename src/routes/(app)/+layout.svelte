@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Footer from '$lib/components/Footer.svelte';
-	import Navbar from '$lib/components/Navbar.svelte';
-	import AppNavbar from '$lib/components/app/AppNavbar.svelte';
 	import { Toaster } from 'svelte-french-toast';
+	import Footer from '$lib/components/app/Footer.svelte';
+	import Navbar from '$lib/components/app/Navbar.svelte';
+	import AppNavbar from '$lib/components/app/AppNavbar.svelte';
 </script>
 
 <Toaster />

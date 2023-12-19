@@ -1,9 +1,9 @@
 <script lang="ts">
-	import * as Form from '$lib/components/ui/form';
-	import { boardCreateSchema, type BoardCreateType } from '$lib/schema/formValidators';
-	import { Loader2 } from 'lucide-svelte';
 	import toast from 'svelte-french-toast';
+	import { Loader2 } from 'lucide-svelte';
 	import type { SuperValidated } from 'sveltekit-superforms';
+	import * as Form from '$lib/components/ui/form';
+	import { boardCreateSchema, type BoardCreateType } from '$lib/validator/formValidators';
 	import FormPicker from './FormPicker.svelte';
 	export let form: SuperValidated<BoardCreateType>;
 </script>
@@ -22,10 +22,10 @@
 			event.result.type === 'success' || event.result.type === 'redirect'
 				? toast.success('Board Created')
 				: event.result.form
-				  ? Object.entries(event.result.data.form.errors).forEach(([key, value]) => {
+					? Object.entries(event.result.data.form.errors).forEach(([key, value]) => {
 							toast.error(value[0]);
-				    })
-				  : toast.error('Cannot create Board');
+						})
+					: toast.error('Cannot create Board');
 			console.log(event.result);
 		}
 	}}

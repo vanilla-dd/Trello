@@ -1,13 +1,14 @@
-import { prisma } from '$lib/server/db';
 import { redirect, type Actions, fail } from '@sveltejs/kit';
-import { boardCreateSchema } from '$lib/schema/formValidators';
-import type { PageServerLoad } from './$types';
 import { superValidate } from 'sveltekit-superforms/server';
+import { boardCreateSchema } from '$lib/validator/formValidators';
+import type { PageServerLoad } from './$types';
+import { prisma } from '$lib/server/db';
 export const load: PageServerLoad = async ({ locals }) => {
 	const user = await locals.getSession();
 	if (!user?.user) {
 		return;
 	}
+	// Get all Boards
 	const allBoards = async () =>
 		await prisma.board.findMany({
 			where: {
@@ -26,6 +27,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 		allBoards: { boards: allBoards() }
 	};
 };
+
+// Create Board
 export const actions: Actions = {
 	default: async (event) => {
 		const user = await event.locals.getSession();

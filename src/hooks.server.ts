@@ -1,10 +1,13 @@
+// Currently only support github
+// TODO : Google auth
+
+import { redirect, type Handle } from '@sveltejs/kit';
 import { SvelteKitAuth } from '@auth/sveltekit';
-import GitHub from '@auth/core/providers/github';
+import { sequence } from '@sveltejs/kit/hooks';
 import { GITHUB_ID, GITHUB_SECRET } from '$env/static/private';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '$lib/server/db';
-import { sequence } from '@sveltejs/kit/hooks';
-import { redirect, type Handle } from '@sveltejs/kit';
+import GitHub from '@auth/core/providers/github';
 
 const redirectIfLoggedIn: Handle = async ({ event, resolve }) => {
 	// Protect any routes under /authenticated

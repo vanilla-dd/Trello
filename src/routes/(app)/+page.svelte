@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Medal } from 'lucide-svelte';
-	import { signIn, signOut } from '@auth/sveltekit/client';
+	import { signIn } from '@auth/sveltekit/client';
 </script>
 
 <svelte:head>
@@ -27,11 +27,6 @@
 </svelte:head>
 
 <div class="flex flex-col items-center justify-center pt-20">
-	<button
-		on:click={() => {
-			signIn();
-		}}>ehlo</button
-	>
 	<div class="flex flex-col items-center justify-center">
 		<div
 			class="mb-4 flex items-center rounded-full border bg-amber-100 p-4 uppercase text-amber-700 shadow-sm"
@@ -50,5 +45,12 @@
 		Colaborate, manage projects, and reach new productivity peaks. From high rises to the home
 		office, the way your team works is unique - accomplish it all with Taskify.
 	</div>
-	<a href="/login" class="mt-6 rounded-md bg-black px-3 py-2 text-white"> Get Taskify for free </a>
+	<button
+		on:click={() => {
+			signIn('github', { callbackUrl: '/board' });
+		}}
+		class="mt-6 rounded-md bg-black px-3 py-2 text-white"
+	>
+		Get Taskify for free
+	</button>
 </div>

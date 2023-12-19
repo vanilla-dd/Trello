@@ -1,7 +1,9 @@
+// TODO : Better Error Handling
+
 import { prisma } from '$lib/server/db';
 import type { Card } from '@prisma/client';
 import { json, type RequestHandler } from '@sveltejs/kit';
-export const POST: RequestHandler = async ({ locals, request }) => {
+export const PATCH: RequestHandler = async ({ locals, request }) => {
 	const user = await locals.getSession();
 	if (!user?.user) {
 		return json('Plea In', { status: 401 });

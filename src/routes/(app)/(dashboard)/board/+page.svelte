@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { Separator } from '$lib/components/ui/separator';
-	import PopOverForm from '$lib/components/popOverForm.svelte';
-	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { CreditCard, User2 } from 'lucide-svelte';
-	import Hint from '$lib/components/Hint.svelte';
+	import { Separator } from '$lib/components/ui/separator';
+	import PopOverForm from '$lib/components/board/popOverForm.svelte';
+	import { Skeleton } from '$lib/components/ui/skeleton';
+	import Hint from '$lib/components/app/Hint.svelte';
 	export let data;
 </script>
 

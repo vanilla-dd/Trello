@@ -1,10 +1,10 @@
 <!-- TODO: Validation for list name update -->
 <script lang="ts">
-	export let data: List;
-	import type { List } from '@prisma/client';
-	import Button from '$lib/components/ui/button/button.svelte';
 	import { enhance } from '$app/forms';
 	import toast from 'svelte-french-toast';
+	import type { List } from '@prisma/client';
+	import Button from '$lib/components/ui/button/button.svelte';
+	export let data: List;
 	let listName = data.title;
 	let NameChange: HTMLFormElement;
 	let updating: boolean;

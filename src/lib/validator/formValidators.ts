@@ -1,3 +1,5 @@
+// Todo: More validatorsssssssssss
+
 import { z } from 'zod';
 export const boardCreateSchema = z.object({
 	title: z
