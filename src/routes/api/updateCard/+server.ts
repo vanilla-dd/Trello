@@ -1,21 +1,25 @@
-// TODO : Better Error Handling
+// TODO : Better Error Handling & req sending
 
 import { prisma } from '$lib/server/db';
-import type { Card } from '@prisma/client';
 import { json, type RequestHandler } from '@sveltejs/kit';
 export const PATCH: RequestHandler = async ({ locals, request }) => {
 	const user = await locals.getSession();
 	if (!user?.user) {
 		return json('Plea In', { status: 401 });
 	}
-	const body: { item: Card; index: number } = await request.json();
+	const body: {
+		item: {
+			id: string;
+			listId: string;
+			index: number;
+		};
+	} = await request.json();
 	// GIVES ERROR WILL SOLVE SOON
 	// if (!body || !body.item || !body.index) {
 	// 	return json('Ple In', { status: 404 });
 	// }
 	const boardId = await prisma.card.findFirst({
 		where: {
-			listId: body.item.listId,
 			id: body.item.id
 		},
 		include: { list: true }
@@ -34,16 +38,17 @@ export const PATCH: RequestHandler = async ({ locals, request }) => {
 		console.log('nada');
 		return json('Please n', { status: 404 });
 	}
-	console.log(body.index + 1);
-	const updateData = async (item: Card, index: number) => {
+	console.log(boardId, body.item);
+	const updateData = async (cardId: string, listId: string, index: number) => {
 		await prisma.card.update({
-			where: { id: item.id, listId: item.listId },
+			where: { id: cardId },
 			data: {
+				listId,
 				position: index + 1
 			}
 		});
 	};
-	updateData(body.item, body.index);
+	updateData(body.item.id, body.item.listId, body.item.index);
 
 	return json('ok', { status: 200 });
 };

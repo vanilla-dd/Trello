@@ -9,9 +9,6 @@ export const PATCH: RequestHandler = async ({ locals, request }) => {
 		return json('Please Log In', { status: 401 });
 	}
 	const body: { item: List; index: number } = await request.json();
-	// if (!body || !body.item || !body.index) {
-	// return json('Please Log In', { status: 404 });
-	// }
 	const isBoardMember = await prisma.boardMembership.findFirst({
 		where: {
 			userId: user?.user.id,

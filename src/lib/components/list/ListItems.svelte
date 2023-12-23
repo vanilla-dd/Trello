@@ -17,23 +17,6 @@
 		updatedAt: Date;
 		cards: Card[];
 	};
-	// function saveItemsToServer(newIndex: number) {
-	// 	console.log('attempting to save to server');
-	// 	return new Promise((resolve, reject) => {
-	// 		window.setTimeout(() => {
-	// 			if (Math.random() < PROBABILITY_OF_FAILURE) {
-	// 				console.error(
-	// 					`saving to server failed, probability of failure is ${PROBABILITY_OF_FAILURE}`
-	// 				);
-	// 				reject({ serverItems });
-	// 			} else {
-	// 				console.log('saving to server succeeded');
-	// 				serverItems = [...newItems];
-	// 				resolve(newItems);
-	// 			}
-	// 		}, NETWORK_DELAY_MS);
-	// 	});
-	// }
 	export let lists: List[];
 	const flipDurationMs = 200;
 	function handleDndConsiderColumns(e: CustomEvent<DndEvent<List>>) {
@@ -46,10 +29,14 @@
 				return;
 			}
 			if (item.position !== index + 1) {
-				fetch('/api/updateList', {
+				const res = await fetch('/api/updateList', {
 					body: JSON.stringify({ item, index }),
 					method: 'PATCH'
 				});
+				if (!res.ok) {
+					console.log('hi');
+					lists = $page.data.lists;
+				}
 			}
 		});
 	}
@@ -62,17 +49,15 @@
 		const colIdx = lists.findIndex((c) => c.id === cid);
 		lists[colIdx].cards = e.detail.items;
 		lists = [...lists];
-		e.detail.items.map((item: Card, index: number) => {
+
+		e.detail.items.map(async (item: Card, index: number) => {
 			if (item.position === index + 1 && item.listId === cid) {
 				return;
 			}
-			if (item.position !== index + 1 && item.listId === cid) {
-				console.log(item, index);
-				fetch('/api/updateCard', {
-					body: JSON.stringify({ item: { id: item.id, listId: item.listId }, index }),
-					method: 'PATCH'
-				});
-			}
+			const res = await fetch('/api/updateCard', {
+				body: JSON.stringify({ item: { id: item.id, listId: cid, index } }),
+				method: 'PATCH'
+			});
 		});
 	}
 	function handleClick(e: CustomEvent<DndEvent>) {
