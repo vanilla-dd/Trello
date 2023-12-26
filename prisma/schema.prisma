@@ -51,6 +51,7 @@ model User {
   email            String?           @unique
   emailVerified    DateTime?
   image            String?
+  boardLimitUsed   Int               @default(0)
   boardMemberships BoardMembership[]
   accounts         Account[]
   boards           Board[]
@@ -143,7 +144,6 @@ model Attachment {
   cardId   String
 }
 
-// Define the Checklist table
 // Define the Checklist table
 model Checklist {
   id     Int             @id @default(autoincrement())

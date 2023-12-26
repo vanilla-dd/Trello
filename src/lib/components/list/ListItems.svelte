@@ -33,6 +33,7 @@
 					body: JSON.stringify({ item, index }),
 					method: 'PATCH'
 				});
+				// fallback
 				if (!res.ok) {
 					console.log('hi');
 					lists = $page.data.lists;

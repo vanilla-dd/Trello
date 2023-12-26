@@ -4,6 +4,7 @@
 	import PopOverForm from '$lib/components/board/popOverForm.svelte';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import Hint from '$lib/components/app/Hint.svelte';
+	import { MAX_BOARD_LIMIT } from '$lib/constant/boardLimit.js';
 	export let data;
 </script>
 
@@ -65,7 +66,7 @@
 						role="button"
 					>
 						<p class="text-sm">Create New Board</p>
-						<span class="text-xs">5 remaining</span>
+						<span class="text-xs">{MAX_BOARD_LIMIT - data.limitUsed.boardLimitUsed} remaining</span>
 						<div class="absolute bottom-0 right-2">
 							<Hint />
 						</div>
