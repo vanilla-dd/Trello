@@ -29,7 +29,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			}
 		});
 	// might have to update the limit to +1 when user join some one else board?
-
+	// const subscriptionType = ()=>await prisma.;
 	return {
 		form: superValidate(boardCreateSchema),
 		allBoards: { boards: allBoards() },

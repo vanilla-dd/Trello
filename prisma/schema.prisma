@@ -17,6 +17,11 @@ enum Role {
   Coworker
 }
 
+enum SubscriptionType {
+  Free
+  Pro
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -46,12 +51,12 @@ model Session {
 
 // Define the User table
 model User {
-  id               String            @id @default(cuid())
+  id               String             @id @default(cuid())
   name             String?
-  email            String?           @unique
+  email            String?            @unique
   emailVerified    DateTime?
   image            String?
-  boardLimitUsed   Int               @default(0)
+  boardLimitUsed   Int                @default(0)
   boardMemberships BoardMembership[]
   accounts         Account[]
   boards           Board[]
@@ -59,6 +64,7 @@ model User {
   Card             Card[]
   Comment          Comment[]
   Activity         Activity[]
+  UserSubscription UserSubscription[]
 
   @@index([email, id])
 }
@@ -189,4 +195,28 @@ model Activity {
   cardId          String?
   checklistItem   ChecklistItem? @relation(fields: [checklistItemId], references: [id])
   checklistItemId Int?
+}
+
+// Define All Subscription model
+model AllSubscription {
+  id          String  @id
+  active      Boolean
+  name        String
+  image       String?
+  description String?
+  metadata    Json
+}
+
+// Define UserSubscription model
+model UserSubscription {
+  id                     String           @id @default(uuid())
+  stripeCustomerId       String?          @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?          @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?          @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime?        @map(name: "stripe_current_period_end")
+  type                   SubscriptionType @default(Free)
+  user                   User             @relation(fields: [userId], references: [id])
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
+  userId                 String
 }
