@@ -199,12 +199,28 @@ model Activity {
 
 // Define All Subscription model
 model AllSubscription {
-  id          String  @id
-  active      Boolean
-  name        String
-  image       String?
-  description String?
-  metadata    Json
+  id                    String                  @id
+  active                Boolean
+  name                  String
+  image                 String?
+  description           String?
+  metadata              Json
+  AllSubscriptionPrices AllSubscriptionPrices[]
+}
+
+// All subscription prices
+model AllSubscriptionPrices {
+  id                String          @id
+  product           AllSubscription @relation(fields: [allSubscriptionId], references: [id])
+  allSubscriptionId String
+  active            Boolean
+  description       String?
+  unit_amount       Int?
+  currency          String
+  type              String
+  interval          String?
+  interval_count    Int?
+  metadata          Json
 }
 
 // Define UserSubscription model
