@@ -11,6 +11,14 @@ export const updateCustomerSubscription = async (
 	const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
 		expand: ['default_payment_method']
 	});
+	if (!userId) {
+		const userData = await prisma.userSubscription.findFirst({
+			where: { stripeCustomerId: customerId },
+			select: { userId: true }
+		});
+		if (!userData?.userId) return;
+		userId = userData?.userId;
+	}
 
 	await prisma.userSubscription.upsert({
 		where: { userId },

@@ -1,4 +1,5 @@
 // Errorsss handling
+import { prisma } from '$lib/server/db';
 import { stripe } from '$lib/server/stripe';
 import { redirect, type Actions } from '@sveltejs/kit';
 
@@ -11,6 +12,19 @@ export const actions: Actions = {
 			return;
 		}
 		if (!priceId) return;
+		const orgSubscription = await prisma.userSubscription.findUnique({
+			where: {
+				userId: user.user.id
+			}
+		});
+		if (orgSubscription?.status === 'active' && orgSubscription.stripeCustomerId) {
+			const stripeSession = await stripe.billingPortal.sessions.create({
+				customer: orgSubscription.stripeCustomerId,
+				return_url: 'http://localhost:5173'
+			});
+			if (stripeSession.url) throw redirect(301, stripeSession.url);
+		}
+
 		const checkout = await stripe.checkout.sessions.create({
 			mode: 'subscription',
 			line_items: [

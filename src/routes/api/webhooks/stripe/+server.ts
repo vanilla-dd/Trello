@@ -7,7 +7,7 @@ import { updateCustomerSubscription } from '$lib/server/updateUserSubscription';
 import type { RequestHandler } from '@sveltejs/kit';
 import { STRIPE_WEBHOOK_SECRET } from '$env/static/private';
 
-const webhookSecret = STRIPE_WEBHOOK_SECRET;
+const webhookSecret = 'whsec_f6c95e08203bcb2457a409fdbae660137ffc9b06f3ca58ed47153e721065f2c1';
 export const POST: RequestHandler = async ({ request }) => {
 	const payload = await request.text();
 	const signature = request.headers.get('Stripe-Signature') ?? '';
