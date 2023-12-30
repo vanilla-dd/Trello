@@ -1,11 +1,13 @@
-import { STRIPE_WEBHOOK_SECRET } from '$env/static/private';
+// Error handling
 import { stripe } from '$lib/server/stripe';
-import { json, type RequestHandler } from '@sveltejs/kit';
 import type Stripe from 'stripe';
 import { upsertProductRecord } from '$lib/server/upsertProductsRecord';
 import { upsertProductPrice } from '$lib/server/upsertProductPrices';
+import { updateCustomerSubscription } from '$lib/server/updateUserSubscription';
+import type { RequestHandler } from '@sveltejs/kit';
+import { STRIPE_WEBHOOK_SECRET } from '$env/static/private';
 
-const webhookSecret = 'whsec_f6c95e08203bcb2457a409fdbae660137ffc9b06f3ca58ed47153e721065f2c1';
+const webhookSecret = STRIPE_WEBHOOK_SECRET;
 export const POST: RequestHandler = async ({ request }) => {
 	const payload = await request.text();
 	const signature = request.headers.get('Stripe-Signature') ?? '';
@@ -19,7 +21,29 @@ export const POST: RequestHandler = async ({ request }) => {
 				break;
 			case 'price.created':
 			case 'price.updated':
-				upsertProductPrice(event.data.object as Stripe.Price);
+				await upsertProductPrice(event.data.object as Stripe.Price);
+				break;
+			case 'customer.subscription.created':
+			case 'customer.subscription.updated':
+			case 'customer.subscription.deleted':
+				await updateCustomerSubscription(
+					event.data.object.id,
+					event.data.object.customer as string,
+					event.data.object.metadata?.userId
+				);
+				break;
+			case 'checkout.session.completed':
+				if (event.data.object.mode === 'subscription') {
+					await updateCustomerSubscription(
+						typeof event.data.object.subscription === 'string'
+							? event.data.object.subscription
+							: event.data.object.subscription?.id || '',
+						typeof event.data.object.customer === 'string'
+							? event.data.object.customer
+							: event.data.object.customer?.id || '',
+						event.data.object.metadata?.userId || ''
+					);
+				}
 				break;
 			default:
 				console.log('We cannot handle that request');
@@ -29,5 +53,5 @@ export const POST: RequestHandler = async ({ request }) => {
 		return new Response(message, { status: 401 });
 	}
 
-	return json({ recevied: true });
+	return new Response('recevied', { status: 200 });
 };

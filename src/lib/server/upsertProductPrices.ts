@@ -1,3 +1,4 @@
+// Error handling
 import type Stripe from 'stripe';
 import { prisma } from './db';
 
