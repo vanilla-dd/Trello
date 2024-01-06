@@ -1,8 +1,49 @@
-// Errorsss handling
+// TODO: Errorsss handling
 import { prisma } from '$lib/server/db';
 import { stripe } from '$lib/server/stripe';
 import { redirect, type Actions } from '@sveltejs/kit';
-
+import type { PageServerLoad } from './$types';
+export const load: PageServerLoad = async ({ locals }) => {
+	const user = await locals.getSession();
+	if (!user?.user) {
+		// TODO: Redirect to login page
+		throw redirect(307, '/');
+	}
+	const getAllPlans = async () =>
+		await prisma.allSubscriptionPrices.findMany({
+			where: { active: true },
+			select: {
+				active: true,
+				currency: true,
+				id: true,
+				type: true,
+				unit_amount: true
+			}
+		});
+	const getUserData = await prisma.userSubscription.findUnique({
+		where: {
+			userId: user.user?.id
+		},
+		select: {
+			cancelOnExpire: true,
+			status: true,
+			canceledAt: true,
+			cancelAt: true,
+			createdAt: true,
+			endedAt: true,
+			metadata: true,
+			quantity: true,
+			stripeCurrentPeriodEnd: true,
+			stripeCurrentPeriodstart: true,
+			type: true,
+			stripeCustomerId: true
+		}
+	});
+	return {
+		allPlans: getAllPlans(),
+		userData: getUserData
+	};
+};
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const data = Object.fromEntries(await request.formData());
@@ -11,7 +52,6 @@ export const actions: Actions = {
 		if (!user?.user?.id) {
 			return;
 		}
-		if (!priceId) return;
 		const orgSubscription = await prisma.userSubscription.findUnique({
 			where: {
 				userId: user.user.id
@@ -20,10 +60,11 @@ export const actions: Actions = {
 		if (orgSubscription?.status === 'active' && orgSubscription.stripeCustomerId) {
 			const stripeSession = await stripe.billingPortal.sessions.create({
 				customer: orgSubscription.stripeCustomerId,
-				return_url: 'http://localhost:5173'
+				return_url: 'https://trello-omega-clone.vercel.app/plans'
 			});
 			if (stripeSession.url) throw redirect(301, stripeSession.url);
 		}
+		if (!priceId) return;
 
 		const checkout = await stripe.checkout.sessions.create({
 			mode: 'subscription',
