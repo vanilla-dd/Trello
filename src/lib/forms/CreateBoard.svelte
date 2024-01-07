@@ -21,9 +21,11 @@
 		onResult(event) {
 			event.result.type === 'success' || event.result.type === 'redirect'
 				? toast.success('Board Created')
-				: Object.keys(event.result.data.form.errors).map((key) =>
-						toast.error(`${event.result.data.form.errors[key]}`)
-					) || toast.error('Cannot create Board');
+				: event.result.data
+					? Object.keys(event.result.data.form.errors).map((key) =>
+							toast.error(`${event.result.data.form.errors[key]}`)
+						)
+					: toast.error('Cannot create Board');
 		}
 	}}
 >
