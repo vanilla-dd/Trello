@@ -28,12 +28,18 @@ export const load: PageServerLoad = async ({ locals }) => {
 				}
 			}
 		});
+	const isPro = async () =>
+		await prisma.userSubscription.findFirst({
+			where: { userId: user.user?.id },
+			select: { status: true, cancelOnExpire: true }
+		});
 	// might have to update the limit to +1 when user join some one else board?
 	// const subscriptionType = ()=>await prisma.;
 	return {
-		form: superValidate(boardCreateSchema),
+		form: await superValidate(boardCreateSchema),
 		allBoards: { boards: allBoards() },
-		limitUsed: getUserLimit()
+		limitUsed: getUserLimit(),
+		isPro: isPro()
 	};
 };
 
@@ -45,16 +51,24 @@ export const actions: Actions = {
 		if (!user?.user) {
 			return fail(400);
 		}
+		console.log(form);
 		if (!form.valid) {
 			return fail(400, {
 				form
 			});
 		}
+		const isPro = await prisma.userSubscription.findFirst({
+			where: { userId: user.user.id },
+			select: { status: true, cancelAt: true, cancelOnExpire: true }
+		});
 		const boardLimit = await prisma.user.findFirst({
 			where: { id: user.user.id },
 			select: { boardLimitUsed: true }
 		});
-		if (boardLimit === null || boardLimit?.boardLimitUsed >= MAX_BOARD_LIMIT) {
+		if (
+			boardLimit === null ||
+			(boardLimit?.boardLimitUsed >= MAX_BOARD_LIMIT && isPro?.status !== 'active')
+		) {
 			return fail(400);
 		}
 		const [imageId, imageThumbUrl, imageFullUrl, imageLinkHTML, imageUserName] =

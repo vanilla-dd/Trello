@@ -2,10 +2,10 @@
 	export let data;
 </script>
 
-<!-- Overhaul like fr -->
-<div class="mt-16 text-black">
+<div class="mt-16 flex gap-3 text-white">
+	<!-- Overhaul like fr
 	{#each data.allPlans as plans}
-		<div>
+		<div class=" w-72 bg-black">
 			<div>
 				<p>{plans.unit_amount === 0 ? 'Free Tier' : 'Pro Plan'}</p>
 				<p>
@@ -19,13 +19,13 @@
 					<form action="" method="POST">
 						<button>You are a Pro</button>
 					</form>
-				{:else}
-					<form action="" method="POST">
-						<input type="text" value={plans.id} name="priceId" hidden class="hidden" />
-						<button>Become a Pro</button>
-					</form>
-				{/if}
+				{:else} -->
+	<form action="" method="POST">
+		<input type="text" value={data.allPlans[0].id} name="priceId" hidden class="hidden" />
+		<button>Become a Pro</button>
+	</form>
+	<!-- {/if}
 			</div>
-		</div>
-	{/each}
+            {/each}
+        </div> -->
 </div>

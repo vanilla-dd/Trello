@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { CreditCard, User2 } from 'lucide-svelte';
+	import { Settings, User2 } from 'lucide-svelte';
 	import { Separator } from '$lib/components/ui/separator';
 	import PopOverForm from '$lib/components/board/popOverForm.svelte';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import Hint from '$lib/components/app/Hint.svelte';
 	import { MAX_BOARD_LIMIT } from '$lib/constant/boardLimit.js';
 	export let data;
+	const isPro = data.isPro?.status === 'active' ? true : false;
+	const remainingLimit = MAX_BOARD_LIMIT - (data?.limitUsed?.boardLimitUsed || 0);
 </script>
 
 <svelte:head>
@@ -34,10 +36,13 @@
 					{data.session?.user?.name} !
 				</span>
 			</p>
-			<small class="flex items-center gap-2 text-lg">
-				<CreditCard />
-				Free
-			</small>
+			<a
+				href="/plans"
+				class="flex w-max items-center gap-1 rounded-sm py-1 pl-1 pr-2 text-lg font-semibold hover:bg-slate-400 hover:text-white"
+			>
+				<Settings class="h-6 w-6" />
+				{isPro ? 'Pro' : 'Free'}
+			</a>
 		</div>
 		<Separator />
 
@@ -66,7 +71,9 @@
 						role="button"
 					>
 						<p class="text-sm">Create New Board</p>
-						<span class="text-xs">{MAX_BOARD_LIMIT - data.limitUsed.boardLimitUsed} remaining</span>
+						<span class="text-xs"
+							>{isPro ? 'Unlimited' : Math.max(0, remainingLimit)} remaining</span
+						>
 						<div class="absolute bottom-0 right-2">
 							<Hint />
 						</div>

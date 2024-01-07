@@ -58,7 +58,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		isBoardMember,
 		lists,
 		boardData,
-		form: superValidate(listCreateSchema)
+		form: await superValidate(listCreateSchema)
 	};
 };
 export const actions: Actions = {
