@@ -1,7 +1,7 @@
 // TODO: Better error handling and validation all over serverside and full refactoring
 
 import { prisma } from '$lib/server/db';
-import type { Actions } from '@sveltejs/kit';
+import { redirect, type Actions } from '@sveltejs/kit';
 import type { Role } from '@prisma/client';
 import type { PageServerLoad } from './$types';
 import { listCreateSchema } from '$lib/validator/formValidators';
@@ -282,5 +282,33 @@ export const actions: Actions = {
 		// return;
 		// }
 		// }
+	},
+	boardDelete: async ({ locals, url }) => {
+		const user = await locals.getSession();
+		if (!user?.user) {
+			return;
+		}
+		const existingMembership = await prisma.boardMembership.findUnique({
+			where: {
+				userId_boardId: {
+					userId: user?.user?.id,
+					boardId: url.pathname.split('/')[2]
+				}
+			},
+			select: { role: true }
+		});
+		if (existingMembership?.role !== 'Owner') {
+			return;
+		}
+		await prisma.$transaction(async (db) => {
+			await db.board.delete({
+				where: { id: url.pathname.split('/')[2] }
+			});
+			await db.user.update({
+				where: { id: user.user?.id },
+				data: { boardLimitUsed: { decrement: 1 } }
+			});
+		});
+		throw redirect(301, '/board');
 	}
 };

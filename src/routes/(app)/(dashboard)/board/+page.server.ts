@@ -92,7 +92,7 @@ export const actions: Actions = {
 				}
 			}),
 			prisma.user.update({
-				data: { boardLimitUsed: boardLimit?.boardLimitUsed + 1 },
+				data: { boardLimitUsed: { increment: 1 } },
 				where: { id: user.user.id }
 			})
 		]);

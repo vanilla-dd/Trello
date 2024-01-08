@@ -101,7 +101,7 @@ model BoardMembership {
   boardId String
   role    Role
   user    User   @relation(fields: [userId], references: [id])
-  Board   Board  @relation(fields: [boardId], references: [id])
+  Board   Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
 
   @@id([userId, boardId]) // Compound unique constraint
 }

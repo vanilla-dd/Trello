@@ -2,7 +2,6 @@
 	import ListItems from '$lib/components/list/ListItems.svelte';
 	import BoardNameChange from '$lib/forms/BoardNameChange.svelte';
 	import { Trash2 } from 'lucide-svelte';
-	import { Trash } from 'radix-icons-svelte';
 	export let data;
 </script>
 
@@ -16,9 +15,11 @@
 		{#if data.isBoardMember?.role === 'Owner'}
 			<BoardNameChange />
 			<div class="ml-auto"></div>
-			<button class="rounded-md px-2 py-1 text-red-500 hover:bg-red-500 hover:text-white"
-				><Trash2 /></button
-			>
+			<form action="?/boardDelete" method="POST">
+				<button type="submit" class="rounded-md px-3 py-2 text-white hover:bg-red-600"
+					><Trash2 class="h-5 w-5" /></button
+				>
+			</form>
 		{:else}
 			<p class="h-auto w-auto bg-transparent p-1 px-2 text-lg font-bold text-white">
 				{data.boardData?.title}
