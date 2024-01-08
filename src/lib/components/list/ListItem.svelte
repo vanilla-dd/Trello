@@ -38,7 +38,11 @@
 					updating = false;
 				}
 			} catch (error) {
-				toast.error(error.flatten().fieldErrors.newName[0]);
+				if (error instanceof ZodError) {
+					toast.error(error?.flatten()?.fieldErrors?.newName?.[0] || 'Failed to update List title');
+				} else {
+					toast.error('Failed to update List title');
+				}
 				listName = data.title;
 				updating = false;
 				cancel();

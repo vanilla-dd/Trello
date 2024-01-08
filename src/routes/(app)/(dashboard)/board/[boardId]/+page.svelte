@@ -1,6 +1,7 @@
 <script>
 	import ListItems from '$lib/components/list/ListItems.svelte';
 	import BoardNameChange from '$lib/forms/BoardNameChange.svelte';
+	import ListForm from '$lib/forms/ListForm.svelte';
 	import { Trash2 } from 'lucide-svelte';
 	export let data;
 </script>
@@ -28,11 +29,16 @@
 	</div>
 	<div
 		style="background-image:url('{data.boardData?.imageFullUrl}')"
-		class="no-scrollbar relative h-full overflow-x-scroll bg-cover bg-center bg-no-repeat pt-20"
+		class="no-scrollbar relative flex h-full overflow-x-scroll bg-cover bg-center bg-no-repeat pt-20"
 	>
 		{#if data.lists}
 			<ListItems lists={data.lists} />
 		{/if}
+		<div class="h-full w-[272px] shrink-0 select-none">
+			{#if data.isBoardMember?.role === 'Owner' || data.isBoardMember?.role === 'Coworker'}
+				<ListForm />
+			{/if}
+		</div>
 	</div>
 </main>
 

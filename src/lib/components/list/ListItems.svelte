@@ -4,7 +4,6 @@
 	import { cn } from '$lib/utils';
 	import { flip } from 'svelte/animate';
 	import { page } from '$app/stores';
-	import ListForm from '$lib/forms/ListForm.svelte';
 	import ListItem from './ListItem.svelte';
 	import CardForm from '../card/CardForm.svelte';
 	import CardItem from '../card/CardItem.svelte';
@@ -102,11 +101,6 @@
 			</div>
 		</div>
 	{/each}
-	<li class="h-full w-[272px] shrink-0 select-none list-none">
-		{#if $page.data.isBoardMember?.role === 'Owner' || $page.data.isBoardMember?.role === 'Coworker'}
-			<ListForm />
-		{/if}
-	</li>
 </div>
 
 <style>

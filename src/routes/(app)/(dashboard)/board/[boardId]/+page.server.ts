@@ -300,15 +300,15 @@ export const actions: Actions = {
 		if (existingMembership?.role !== 'Owner') {
 			return;
 		}
-		await prisma.$transaction(async (db) => {
-			await db.board.delete({
+		await prisma.$transaction([
+			prisma.board.delete({
 				where: { id: url.pathname.split('/')[2] }
-			});
-			await db.user.update({
+			}),
+			prisma.user.update({
 				where: { id: user.user?.id },
 				data: { boardLimitUsed: { decrement: 1 } }
-			});
-		});
+			})
+		]);
 		throw redirect(301, '/board');
 	}
 };
